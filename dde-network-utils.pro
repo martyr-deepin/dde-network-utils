@@ -3,7 +3,7 @@ QT       += dbus
 
 TARGET = dde-network-utils
 TEMPLATE = lib
-CONFIG += link_pkgconfig c++11 create_pc create_prl no_install_prl
+CONFIG += link_pkgconfig c++11 create_pc create_prl no_install_prl no_keywords
 PKGCONFIG      += dframeworkdbus
 
 DEFINES += DDENETWORKUTILS_LIBRARY
@@ -24,21 +24,20 @@ HEADERS += \
     wirelessdevice.h \
     wireddevice.h
 
-unix {
-    target.path = /usr/lib
+target.path = /usr/lib
 
-    includes.files = *.h
-    includes.path = /usr/include/libddenetworkutils
+includes.files = *.h
 
-    QMAKE_PKGCONFIG_NAME = libddenetworkutils
-    #QMAKE_PKGCONFIG_VERSION = $$VERSION
-    QMAKE_PKGCONFIG_DESCRIPTION = libddenetworkutils
-    QMAKE_PKGCONFIG_INCDIR = $$includes.path
-    QMAKE_PKGCONFIG_LIBDIR = $$target.path
-    QMAKE_PKGCONFIG_DESTDIR = pkgconfig
+includes.path = /usr/include/libddenetworkutils
 
-    INSTALLS += includes target
-}
+QMAKE_PKGCONFIG_NAME = libddenetworkutils
+#QMAKE_PKGCONFIG_VERSION = $$VERSION
+QMAKE_PKGCONFIG_DESCRIPTION = libddenetworkutils
+QMAKE_PKGCONFIG_INCDIR = $$includes.path
+QMAKE_PKGCONFIG_LIBDIR = $$target.path
+QMAKE_PKGCONFIG_DESTDIR = pkgconfig
+
+INSTALLS += includes target
 
 SUBDIRS += \
     dde-network-utils.pro

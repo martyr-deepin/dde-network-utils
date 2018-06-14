@@ -143,7 +143,7 @@ void NetworkModel::onVPNEnabledChanged(const bool enabled)
     {
         m_vpnEnabled = enabled;
 
-        emit vpnEnabledChanged(m_vpnEnabled);
+        Q_EMIT vpnEnabledChanged(m_vpnEnabled);
     }
 }
 
@@ -157,7 +157,7 @@ void NetworkModel::onProxiesChanged(const QString &type, const QString &url, con
     {
         m_proxies[type] = config;
 
-        emit proxyChanged(type, config);
+        Q_EMIT proxyChanged(type, config);
     }
 }
 
@@ -167,7 +167,7 @@ void NetworkModel::onAutoProxyChanged(const QString &proxy)
     {
         m_autoProxy = proxy;
 
-        emit autoProxyChanged(m_autoProxy);
+        Q_EMIT autoProxyChanged(m_autoProxy);
     }
 }
 
@@ -177,7 +177,7 @@ void NetworkModel::onProxyMethodChanged(const QString &proxyMethod)
     {
         m_proxyMethod = proxyMethod;
 
-        emit proxyMethodChanged(m_proxyMethod);
+        Q_EMIT proxyMethodChanged(m_proxyMethod);
     }
 }
 
@@ -187,7 +187,7 @@ void NetworkModel::onProxyIgnoreHostsChanged(const QString &hosts)
     {
         m_proxyIgnoreHosts = hosts;
 
-        emit proxyIgnoreHostsChanged(m_proxyIgnoreHosts);
+        Q_EMIT proxyIgnoreHostsChanged(m_proxyIgnoreHosts);
     }
 }
 
@@ -226,7 +226,7 @@ void NetworkModel::onDeviceListChanged(const QString &devices)
                 m_devices.append(d);
 
                 // init device enabled status
-                emit requestDeviceStatus(d->path());
+                Q_EMIT requestDeviceStatus(d->path());
             } else {
                 d->updateDeviceInfo(info);
             }
@@ -245,7 +245,7 @@ void NetworkModel::onDeviceListChanged(const QString &devices)
         m_devices.removeOne(r);
     qDeleteAll(removeList);
 
-    emit deviceListChanged(m_devices);
+    Q_EMIT deviceListChanged(m_devices);
 }
 
 void NetworkModel::onConnectionListChanged(const QString &conns)
@@ -285,7 +285,7 @@ void NetworkModel::onConnectionListChanged(const QString &conns)
         wDev->setConnections(devicesConnectionsList[hwAdr]);
     }
 
-    emit connectionListChanged();
+    Q_EMIT connectionListChanged();
 }
 
 void NetworkModel::onActiveConnInfoChanged(const QString &conns)
@@ -333,7 +333,7 @@ void NetworkModel::onActiveConnInfoChanged(const QString &conns)
         }
     }
 
-    emit activeConnInfoChanged(m_activeConnInfos);
+    Q_EMIT activeConnInfoChanged(m_activeConnInfos);
 }
 
 void NetworkModel::onActiveConnectionsChanged(const QString &conns)
@@ -353,7 +353,7 @@ void NetworkModel::onActiveConnectionsChanged(const QString &conns)
         m_activeConnObjects << info;
     }
 
-    emit activeConnectionsChanged(m_activeConnections);
+    Q_EMIT activeConnectionsChanged(m_activeConnections);
 }
 
 void NetworkModel::onConnectionSessionCreated(const QString &device, const QString &sessionPath)
@@ -362,11 +362,11 @@ void NetworkModel::onConnectionSessionCreated(const QString &device, const QStri
     {
         if (dev->path() != device)
             continue;
-        emit dev->sessionCreated(sessionPath);
+        Q_EMIT dev->sessionCreated(sessionPath);
         return;
     }
 
-    emit unhandledConnectionSessionCreated(device, sessionPath);
+    Q_EMIT unhandledConnectionSessionCreated(device, sessionPath);
 }
 
 void NetworkModel::onDeviceAPListChanged(const QString &device, const QString &apList)
@@ -417,7 +417,7 @@ void NetworkModel::onDeviceEnableChanged(const QString &device, const bool enabl
 
     dev->setEnabled(enabled);
 
-    emit deviceEnableChanged(device, enabled);
+    Q_EMIT deviceEnableChanged(device, enabled);
 }
 
 void NetworkModel::onDeviceConnectionsChanged(const QString &devPath, const QList<QString> &connections)
@@ -432,7 +432,7 @@ void NetworkModel::onChainsTypeChanged(const QString &type)
 {
     if (type != m_chainsProxy.type) {
         m_chainsProxy.type = type;
-        emit chainsTypeChanged(type);
+        Q_EMIT chainsTypeChanged(type);
     }
 }
 
@@ -440,7 +440,7 @@ void NetworkModel::onChainsAddrChanged(const QString &addr)
 {
     if (addr != m_chainsProxy.url) {
         m_chainsProxy.url = addr;
-        emit chainsAddrChanged(addr);
+        Q_EMIT chainsAddrChanged(addr);
     }
 }
 
@@ -448,7 +448,7 @@ void NetworkModel::onChainsPortChanged(const uint port)
 {
     if (port != m_chainsProxy.port) {
         m_chainsProxy.port = port;
-        emit chainsPortChanged(port);
+        Q_EMIT chainsPortChanged(port);
     }
 }
 
@@ -456,7 +456,7 @@ void NetworkModel::onChainsUserChanged(const QString &user)
 {
     if (user != m_chainsProxy.username) {
         m_chainsProxy.username = user;
-        emit chainsUsernameChanged(user);
+        Q_EMIT chainsUsernameChanged(user);
     }
 }
 
@@ -464,7 +464,7 @@ void NetworkModel::onChainsPasswdChanged(const QString &passwd)
 {
     if (passwd != m_chainsProxy.password) {
         m_chainsProxy.password = passwd;
-        emit chainsPasswdChanged(passwd);
+        Q_EMIT chainsPasswdChanged(passwd);
     }
 }
 
@@ -490,5 +490,5 @@ void NetworkModel::setAppProxyExist(bool appProxyExist)
 
     m_appProxyExist = appProxyExist;
 
-    emit appProxyExistChanged(appProxyExist);
+    Q_EMIT appProxyExistChanged(appProxyExist);
 }

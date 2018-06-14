@@ -49,7 +49,7 @@ public:
 
     void active();
 
-public slots:
+public Q_SLOTS:
     void activateConnection(const QString &devPath, const QString &uuid);
     void activateAccessPoint(const QString &devPath, const QString &apPath, const QString &uuid);
     void createApConfig(const QString &devPath, const QString &apPath);
@@ -79,7 +79,7 @@ public slots:
     void setChainsProxy(const ProxyConfig &config);
     void onChainsTypeChanged(const QString &type);
 
-private slots:
+private Q_SLOTS:
     void queryAutoProxyCB(QDBusPendingCallWatcher *w);
     void queryProxyCB(QDBusPendingCallWatcher *w);
     void queryProxyMethodCB(QDBusPendingCallWatcher *w);

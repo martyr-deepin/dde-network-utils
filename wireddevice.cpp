@@ -39,12 +39,12 @@ void WiredDevice::setConnections(const QList<QString> &connections)
 {
     m_connections = connections;
 
-    emit connectionsChanged(m_connections);
+    Q_EMIT connectionsChanged(m_connections);
 }
 
 void WiredDevice::onActiveConnectionChanged(const QJsonObject &connInfo)
 {
     m_activeConnection = connInfo;
 
-    emit activeConnectionChanged(m_activeConnection);
+    Q_EMIT activeConnectionChanged(m_activeConnection);
 }

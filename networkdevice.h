@@ -75,21 +75,21 @@ public:
     const QString realHwAdr() const;
     const QString usingHwAdr() const;
 
-signals:
+Q_SIGNALS:
     void removed() const;
     void statusChanged(DeviceStatus stat) const;
     void statusChanged(const QString &statStr) const;
     void enableChanged(const bool enabled) const;
     void sessionCreated(const QString &sessionPath) const;
 
-public slots:
+public Q_SLOTS:
     void setEnabled(const bool enabled);
     void updateDeviceInfo(const QJsonObject &devInfo);
 
 protected:
     explicit NetworkDevice(const DeviceType type, const QJsonObject &info, QObject *parent = 0);
 
-private slots:
+private Q_SLOTS:
     void setDeviceStatus(const int status);
 
 private:

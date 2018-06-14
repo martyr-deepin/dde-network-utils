@@ -63,9 +63,9 @@ void WirelessDevice::setAPList(const QString &apList)
         const auto ssid = ap.value("Ssid").toString();
 
         if (m_aps.contains(ssid))
-            emit apInfoChanged(ap);
+            Q_EMIT apInfoChanged(ap);
         else
-            emit apAdded(ap);
+            Q_EMIT apAdded(ap);
 
         m_aps << ssid;
     }
@@ -73,7 +73,7 @@ void WirelessDevice::setAPList(const QString &apList)
     for (const auto ssid : ssidList)
     {
         if (!m_aps.contains(ssid))
-            emit apRemoved(ssid);
+            Q_EMIT apRemoved(ssid);
     }
 }
 
@@ -83,9 +83,9 @@ void WirelessDevice::updateAPInfo(const QString &apInfo)
     const auto ssid = ap.value("Ssid").toString();
 
     if (m_aps.contains(ssid))
-        emit apInfoChanged(ap);
+        Q_EMIT apInfoChanged(ap);
     else
-        emit apAdded(ap);
+        Q_EMIT apAdded(ap);
 
     m_aps << ssid;
 }
@@ -96,7 +96,7 @@ void WirelessDevice::deleteAP(const QString &apInfo)
     const auto ssid = ap.value("Ssid").toString();
 
     m_aps.remove(ssid);
-    emit apRemoved(ssid);
+    Q_EMIT apRemoved(ssid);
 }
 
 void WirelessDevice::setActiveApInfo(const QJsonObject &apInfo)
@@ -106,7 +106,7 @@ void WirelessDevice::setActiveApInfo(const QJsonObject &apInfo)
         const QJsonObject oldApInfo = m_activeApInfo;
         m_activeApInfo = apInfo;
 
-        emit activeApChanged(oldApInfo, m_activeApInfo);
+        Q_EMIT activeApChanged(oldApInfo, m_activeApInfo);
     }
 }
 
@@ -119,5 +119,5 @@ void WirelessDevice::setHotspotInfo(const QJsonObject &hotspotInfo)
     m_hotspotInfo = hotspotInfo;
 
     if (changed)
-        emit hotspotEnabledChanged(hotspotEnabled());
+        Q_EMIT hotspotEnabledChanged(hotspotEnabled());
 }

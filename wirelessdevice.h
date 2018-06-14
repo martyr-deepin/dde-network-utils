@@ -47,14 +47,14 @@ public:
     inline QString activeApName() const { return activeApInfo()["ConnectionName"].toString(); }
     const QJsonObject activeApInfo() const { return m_activeApInfo; }
 
-signals:
+Q_SIGNALS:
     void apAdded(const QJsonObject &apInfo) const;
     void apInfoChanged(const QJsonObject &apInfo) const;
     void apRemoved(const QString &ssid) const;
     void activeApChanged(const QJsonObject &oldApInfo, const QJsonObject &newApInfo) const;
     void hotspotEnabledChanged(const bool enabled) const;
 
-public slots:
+public Q_SLOTS:
     void setAPList(const QString &apList);
     void updateAPInfo(const QString &apInfo);
     void deleteAP(const QString &apInfo);

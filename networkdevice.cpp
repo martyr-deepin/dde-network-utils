@@ -67,8 +67,8 @@ void NetworkDevice::setDeviceStatus(const int status)
     {
         m_status = stat;
 
-        emit statusChanged(m_status);
-        emit statusChanged(statusString());
+        Q_EMIT statusChanged(m_status);
+        Q_EMIT statusChanged(statusString());
     }
 }
 
@@ -95,14 +95,14 @@ const QString NetworkDevice::statusString() const
 
 NetworkDevice::~NetworkDevice()
 {
-    emit removed();
+    Q_EMIT removed();
 }
 
 void NetworkDevice::setEnabled(const bool enabled)
 {
     if (m_enabled != enabled) {
         m_enabled = enabled;
-        emit enableChanged(m_enabled);
+        Q_EMIT enableChanged(m_enabled);
     }
 }
 

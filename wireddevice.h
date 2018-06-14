@@ -46,11 +46,11 @@ public:
     const QList<QString> connections() const { return m_connections; }
     const QJsonObject activeConnection() const { return m_activeConnection; }
 
-signals:
+Q_SIGNALS:
     void connectionsChanged(const QList<QString> &connPaths) const;
     void activeConnectionChanged(const QJsonObject &connInfo) const;
 
-public slots:
+public Q_SLOTS:
     void onActiveConnectionChanged(const QJsonObject &connInfo);
 
 private:
