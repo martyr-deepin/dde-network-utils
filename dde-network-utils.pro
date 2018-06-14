@@ -17,7 +17,6 @@ SOURCES += \
     wireddevice.cpp
 
 HEADERS += \
-    dde-network-utils_global.h \
     networkmodel.h \
     networkworker.h \
     networkdevice.h \
@@ -41,6 +40,3 @@ INSTALLS += includes target
 
 SUBDIRS += \
     dde-network-utils.pro
-
-DISTFILES += \
-    dde-network-utils.pro.user
