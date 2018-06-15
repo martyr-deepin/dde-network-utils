@@ -1,0 +1,10 @@
+[main]
+host = https://www.transifex.com
+minimum_perc = 80
+mode = developer
+
+[deepin-desktop-environment.dde-network-utils]
+file_filter = translations/dde-network-utils_<lang>.ts
+source_file = translations/dde-network-utils.ts
+source_lang = en
+type = QT
