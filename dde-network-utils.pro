@@ -10,22 +10,28 @@ DEFINES += DDENETWORKUTILS_LIBRARY
 DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
-    networkmodel.cpp \
-    networkworker.cpp \
-    networkdevice.cpp \
-    wirelessdevice.cpp \
-    wireddevice.cpp
+    $$PWD/networkmodel.cpp \
+    $$PWD/networkworker.cpp \
+    $$PWD/networkdevice.cpp \
+    $$PWD/wirelessdevice.cpp \
+    $$PWD/wireddevice.cpp
 
 HEADERS += \
-    networkmodel.h \
-    networkworker.h \
-    networkdevice.h \
-    wirelessdevice.h \
-    wireddevice.h
+    $$PWD/networkmodel.h \
+    $$PWD/networkworker.h \
+    $$PWD/networkdevice.h \
+    $$PWD/wirelessdevice.h \
+    $$PWD/wireddevice.h
 
 target.path = /usr/lib
 
-includes.files = *.h
+includes.files += *.h
+includes.files += \
+    $$PWD/NetworkModel \
+    $$PWD/NetworkWorker \
+    $$PWD/NetworkDevice \
+    $$PWD/WirelessDevice \
+    $$PWD/WiredDevice
 
 includes.path = /usr/include/libddenetworkutils
 
