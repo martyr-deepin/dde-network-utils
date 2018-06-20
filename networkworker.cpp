@@ -66,7 +66,7 @@ void NetworkWorker::active()
 {
     const bool isAppProxyVaild = QProcess::execute("which", QStringList() << "/usr/bin/proxychains4") == 0;
 
-    m_networkModel->setAppProxyExist(isAppProxyVaild);
+    m_networkModel->onAppProxyExistChanged(isAppProxyVaild);
 }
 
 void NetworkWorker::setVpnEnable(const bool enable)

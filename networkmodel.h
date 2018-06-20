@@ -60,9 +60,7 @@ public:
     ProxyConfig getChainsProxy() { return m_chainsProxy;}
 
     bool vpnEnabled() const { return m_vpnEnabled; }
-
     bool appProxyExist() const { return m_appProxyExist; }
-    void setAppProxyExist(bool appProxyExist);
 
     const ProxyConfig proxy(const QString &type) const { return m_proxies[type]; }
     const QString autoProxy() const { return m_autoProxy; }
@@ -105,6 +103,7 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void onVPNEnabledChanged(const bool enabled);
+    void onAppProxyExistChanged(bool appProxyExist);
     void onProxiesChanged(const QString &type, const QString &url, const uint port);
     void onAutoProxyChanged(const QString &proxy);
     void onProxyMethodChanged(const QString &proxyMethod);

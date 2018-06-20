@@ -36,7 +36,6 @@ includes.files += \
 includes.path = /usr/include/libddenetworkutils
 
 QMAKE_PKGCONFIG_NAME = libddenetworkutils
-#QMAKE_PKGCONFIG_VERSION = $$VERSION
 QMAKE_PKGCONFIG_DESCRIPTION = libddenetworkutils
 QMAKE_PKGCONFIG_INCDIR = $$includes.path
 QMAKE_PKGCONFIG_LIBDIR = $$target.path
