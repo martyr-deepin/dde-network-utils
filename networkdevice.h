@@ -38,6 +38,8 @@ class NetworkDevice : public QObject
 {
     Q_OBJECT
 
+    friend class NetworkModel;
+
 public:
     enum DeviceType
     {
@@ -82,7 +84,7 @@ Q_SIGNALS:
     void enableChanged(const bool enabled) const;
     void sessionCreated(const QString &sessionPath) const;
 
-public Q_SLOTS:
+private Q_SLOTS:
     void setEnabled(const bool enabled);
     void updateDeviceInfo(const QJsonObject &devInfo);
 
