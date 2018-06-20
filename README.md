@@ -37,7 +37,7 @@ NetworkDevice 是对网络设备的一个基本抽象，作为设备管理的基
 NetworkDevice 对应了机器上的每个真实网络设备，它具有自己的基本硬件信息和网络状态信息，提供了此网卡的工作状态信息及状态转换信号。
 
 ### WiredDevice
-由 NetworkDevice 派生出来的有线网络设备，增加了有些网络特有的 ActiveConnection 等属性。
+由 NetworkDevice 派生出来的有线网络设备，增加了有线网络特有的 ActiveConnection 等属性。
 
 ### WirelessDevice
 由 NetworkDevice 派生出来的无线网络设备，增加了如热点信息、AP 列表信息等无线网络特有的信息。
