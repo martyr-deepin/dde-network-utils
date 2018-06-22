@@ -29,6 +29,7 @@
 #include "networkdevice.h"
 
 #include <QMap>
+#include <QJsonArray>
 
 namespace dde {
 
@@ -47,10 +48,13 @@ public:
     inline QString activeApName() const { return activeApInfo()["ConnectionName"].toString(); }
     const QJsonObject activeApInfo() const { return m_activeApInfo; }
 
+    const QJsonArray apList() const;
+    int activeApStrgength() const;
+
 Q_SIGNALS:
     void apAdded(const QJsonObject &apInfo) const;
     void apInfoChanged(const QJsonObject &apInfo) const;
-    void apRemoved(const QString &ssid) const;
+    void apRemoved(const QJsonObject &apInfo) const;
     void activeApChanged(const QJsonObject &oldApInfo, const QJsonObject &newApInfo) const;
     void hotspotEnabledChanged(const bool enabled) const;
 
@@ -62,9 +66,9 @@ public Q_SLOTS:
     void setHotspotInfo(const QJsonObject &hotspotInfo);
 
 private:
-    QSet<QString> m_aps;
     QJsonObject m_activeApInfo;
     QJsonObject m_hotspotInfo;
+    QMap<QString, QJsonObject> m_apsMap;
 };
 
 }
