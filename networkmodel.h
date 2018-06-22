@@ -69,6 +69,7 @@ public:
     const QList<NetworkDevice *> devices() const { return m_devices; }
     const QList<QJsonObject> vpns() const { return m_connections.value("vpn"); }
     const QList<QJsonObject> wireds() const { return m_connections.value("wired"); }
+    const QList<QJsonObject> wireless() const { return m_connections.value("wireless"); }
     const QList<QJsonObject> pppoes() const { return m_connections.value("pppoe"); }
     const QList<QJsonObject> hotspots() const { return m_connections.value("wireless-hotspot"); }
     const QList<QJsonObject> activeConnInfos() const { return m_activeConnInfos; }
@@ -100,6 +101,8 @@ Q_SIGNALS:
     void chainsUsernameChanged(const QString &username) const;
     void chainsPasswdChanged(const QString &passwd) const;
     void appProxyExistChanged(const bool appProxyExist) const;
+    void needSecrets(const QString &info);
+    void needSecretsFinished(const QString &info0, const QString &info1);
 
 private Q_SLOTS:
     void onVPNEnabledChanged(const bool enabled);
@@ -123,6 +126,8 @@ private Q_SLOTS:
     void onChainsPortChanged(const uint port);
     void onChainsUserChanged(const QString &user);
     void onChainsPasswdChanged(const QString &passwd);
+    void onNeedSecrets(const QString &info);
+    void onNeedSecretsFinished(const QString &info0, const QString &info1);
 
 private:
     bool containsDevice(const QString &devPath) const;
@@ -142,6 +147,7 @@ private:
     QSet<QString> m_activeConnections;
     QMap<QString, ProxyConfig> m_proxies;
     QMap<QString, QList<QJsonObject>> m_connections;
+    NetworkDevice *m_lastSecretDevice;
 };
 
 }   // namespace network

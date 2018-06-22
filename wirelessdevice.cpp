@@ -47,7 +47,7 @@ const QString WirelessDevice::hotspotUuid() const
 {
     Q_ASSERT(hotspotEnabled());
 
-    return m_hotspotInfo.value("ConnectionUuid").toString();
+    return m_activeHotspotInfo.value("ConnectionUuid").toString();
 }
 
 const QJsonArray WirelessDevice::apList() const
@@ -59,20 +59,6 @@ const QJsonArray WirelessDevice::apList() const
     return apArray;
 }
 
-int WirelessDevice::activeApStrgength() const
-{
-    if (!m_apsMap.isEmpty() && !m_activeApInfo.isEmpty()) {
-        /* TODO: should use the Path of AP as a condition instead of a name here */
-        const QString &activeConnectionName = m_activeApInfo.value("ConnectionName").toString();
-        for (auto ap : m_apsMap.values()) {
-            if (ap.value("Ssid").toString() == activeConnectionName) {
-                return ap.value("Strength").toInt();
-            }
-        }
-    }
-    return 0;
-}
-
 void WirelessDevice::setAPList(const QString &apList)
 {
     QMap<QString, QJsonObject> apsMapOld = m_apsMap;
@@ -82,7 +68,14 @@ void WirelessDevice::setAPList(const QString &apList)
     for (auto item : apArray) {
         const QJsonObject &ap = item.toObject();
         const QString &path = ap.value("Path").toString();
+
         if (!path.isEmpty()) {
+            if (ap.value("Ssid").toString() == activeConnName() &&
+                    ap.value("Strength").toInt() > m_activeApInfo.value("Strength").toInt()) {
+                m_activeApInfo = ap;
+                Q_EMIT activeApInfoChanged(m_activeApInfo);
+            }
+
             if (!apsMapOld.contains(path)) {
                 Q_EMIT apAdded(ap);
             } else {
@@ -107,6 +100,12 @@ void WirelessDevice::updateAPInfo(const QString &apInfo)
     const auto &path = ap.value("Path").toString();
 
     if (!path.isEmpty()) {
+        if (ap.value("Ssid").toString() == activeConnName() &&
+                ap.value("Strength").toInt() > m_activeApInfo.value("Strength").toInt()) {
+            m_activeApInfo = ap;
+            Q_EMIT activeApInfoChanged(m_activeApInfo);
+        }
+
         if (m_apsMap.contains(path)) {
             Q_EMIT apInfoChanged(ap);
         } else {
@@ -130,25 +129,35 @@ void WirelessDevice::deleteAP(const QString &apInfo)
     }
 }
 
-void WirelessDevice::setActiveApInfo(const QJsonObject &apInfo)
+void WirelessDevice::setActiveConnectionInfo(const QJsonObject &activeConnInfo)
 {
-    if (m_activeApInfo != apInfo)
+    if (m_activeConnInfo != activeConnInfo)
     {
-        const QJsonObject oldApInfo = m_activeApInfo;
-        m_activeApInfo = apInfo;
+        const QJsonObject oldConnInfo = m_activeConnInfo;
+        m_activeConnInfo = activeConnInfo;
 
-        Q_EMIT activeApChanged(oldApInfo, m_activeApInfo);
+        Q_EMIT activeConnectionChanged(oldConnInfo, m_activeConnInfo);
+    }
+
+    if (m_activeConnInfo.isEmpty()) {
+        m_activeApInfo = QJsonObject();
+        Q_EMIT activeApInfoChanged(m_activeApInfo);
     }
 }
 
-void WirelessDevice::setHotspotInfo(const QJsonObject &hotspotInfo)
+void WirelessDevice::setActiveHotspotInfo(const QJsonObject &hotspotInfo)
 {
     Q_ASSERT(supportHotspot());
 
-    const bool changed = m_hotspotInfo.isEmpty() != hotspotInfo.isEmpty();
+    const bool changed = m_activeHotspotInfo.isEmpty() != hotspotInfo.isEmpty();
 
-    m_hotspotInfo = hotspotInfo;
+    m_activeHotspotInfo = hotspotInfo;
 
     if (changed)
         Q_EMIT hotspotEnabledChanged(hotspotEnabled());
+}
+
+void WirelessDevice::setConnections(const QList<QJsonObject> connections)
+{
+    m_connections = connections;
 }

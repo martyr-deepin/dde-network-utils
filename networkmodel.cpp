@@ -48,7 +48,8 @@ NetworkDevice::DeviceType parseDeviceType(const QString &type)
 }
 
 NetworkModel::NetworkModel(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+    m_lastSecretDevice(nullptr)
 {
 }
 
@@ -276,13 +277,14 @@ void NetworkModel::onConnectionListChanged(const QString &conns)
 
     for (NetworkDevice *dev : m_devices)
     {
-        if (dev->type() != NetworkDevice::Wired)
-            continue;
+        if (dev->type() == NetworkDevice::Wired) {
+            WiredDevice *wDev = static_cast<WiredDevice *>(dev);
+            const QString &hwAdr = wDev->realHwAdr();
 
-        WiredDevice *wDev = static_cast<WiredDevice *>(dev);
-        const QString &hwAdr = wDev->realHwAdr();
-
-        wDev->setConnections(devicesConnectionsList[hwAdr]);
+            wDev->setConnections(devicesConnectionsList[hwAdr]);
+        } else if (dev->type() == NetworkDevice::Wireless) {
+            static_cast<WirelessDevice *>(dev)->setConnections(m_connections.value("wireless"));
+        }
     }
 
     Q_EMIT connectionListChanged();
@@ -325,8 +327,8 @@ void NetworkModel::onActiveConnInfoChanged(const QString &conns)
         case NetworkDevice::Wireless:
         {
             WirelessDevice *d = static_cast<WirelessDevice *>(dev);
-            d->setActiveApInfo(activeConnInfo[hwAdr]);
-            d->setHotspotInfo(activeHotspotInfo.value(hwAdr));
+            d->setActiveConnectionInfo(activeConnInfo[hwAdr]);
+            d->setActiveHotspotInfo(activeHotspotInfo.value(hwAdr));
             break;
         }
         default:;
@@ -466,6 +468,31 @@ void NetworkModel::onChainsPasswdChanged(const QString &passwd)
         m_chainsProxy.password = passwd;
         Q_EMIT chainsPasswdChanged(passwd);
     }
+}
+void NetworkModel::onNeedSecrets(const QString &info)
+{
+    /* TODO: there is a bug in daemon about var 'info', the value of key "DevicePath" is wrong */
+    //const QJsonObject &infoObject = QJsonDocument::fromJson(info.toUtf8()).object();
+    //m_lastSecretDevice = device(infoObject.value("DevicePath").toString());
+
+    /* TODO: check this signal(NeedSecrets) of daemon is only for wireless device */
+    //if (m_lastSecretDevice != nullptr && m_lastSecretDevice->type() == NetworkDevice::Wireless) {
+        //Q_EMIT static_cast<WirelessDevice *>(m_lastSecretDevice)->needSecrets(info);
+    //} else {
+        //m_lastSecretDevice = nullptr;
+    //}
+
+    Q_EMIT needSecrets(info);
+}
+
+void NetworkModel::onNeedSecretsFinished(const QString &info0, const QString &info1)
+{
+    /* TODO: same as above */
+    //if (m_lastSecretDevice != nullptr) {
+        //Q_EMIT static_cast<WirelessDevice *>(m_lastSecretDevice)->needSecretsFinished(info0, info1);
+    //}
+
+    Q_EMIT needSecretsFinished(info0, info1);
 }
 
 bool NetworkModel::containsDevice(const QString &devPath) const

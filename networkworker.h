@@ -56,6 +56,7 @@ public Q_SLOTS:
     void createConnection(const QString &type, const QString &devPath);
     void deleteConnection(const QString &uuid);
     void deactiveConnection(const QString &uuid);
+    void disconnectDevice(const QString &devPath);
     void initWirelessHotspot(const QString &devPath);
     void queryChains();
     void queryAutoProxy();
@@ -78,6 +79,8 @@ public Q_SLOTS:
     void setProxy(const QString &type, const QString &addr, const QString &port);
     void setChainsProxy(const ProxyConfig &config);
     void onChainsTypeChanged(const QString &type);
+    void feedSecret(const QString &connectionPath, const QString &settingName, const QString &password, const bool autoConnect);
+    void cancelSecret(const QString &connectionPath, const QString &settingName);
 
 private Q_SLOTS:
     void queryAutoProxyCB(QDBusPendingCallWatcher *w);

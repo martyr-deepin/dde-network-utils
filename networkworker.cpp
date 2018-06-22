@@ -42,6 +42,8 @@ NetworkWorker::NetworkWorker(NetworkModel *model, QObject *parent)
     connect(&m_networkInter, &NetworkInter::AccessPointPropertiesChanged, m_networkModel, &NetworkModel::onDeviceAPInfoChanged);
     connect(&m_networkInter, &NetworkInter::AccessPointRemoved, m_networkModel, &NetworkModel::onDeviceAPRemoved);
     connect(&m_networkInter, &NetworkInter::VpnEnabledChanged, m_networkModel, &NetworkModel::onVPNEnabledChanged);
+    connect(&m_networkInter, &NetworkInter::NeedSecrets, m_networkModel, &NetworkModel::onNeedSecrets);
+    connect(&m_networkInter, &NetworkInter::NeedSecretsFinished, m_networkModel, &NetworkModel::onNeedSecretsFinished);
     connect(m_networkModel, &NetworkModel::requestDeviceStatus, this, &NetworkWorker::queryDeviceStatus, Qt::QueuedConnection);
 //    connect(m_networkModel, &NetworkModel::connectionListChanged, this, &NetworkWorker::queryDevicesConnections, Qt::QueuedConnection);
 
@@ -120,6 +122,15 @@ void NetworkWorker::setChainsProxy(const ProxyConfig &config)
 void NetworkWorker::onChainsTypeChanged(const QString &type)
 {
     m_networkModel->onChainsTypeChanged(type);
+}
+
+void NetworkWorker::feedSecret(const QString &connectionPath, const QString &settingName, const QString &password, const bool autoConnect)
+{
+    m_networkInter.FeedSecret(connectionPath, settingName, password, autoConnect);
+}
+void NetworkWorker::cancelSecret(const QString &connectionPath, const QString &settingName)
+{
+    m_networkInter.CancelSecret(connectionPath, settingName);
 }
 
 void NetworkWorker::initWirelessHotspot(const QString &devPath)
@@ -245,6 +256,11 @@ void NetworkWorker::deleteConnection(const QString &uuid)
 void NetworkWorker::deactiveConnection(const QString &uuid)
 {
     m_networkInter.DeactivateConnection(uuid);
+}
+
+void NetworkWorker::disconnectDevice(const QString &devPath)
+{
+    m_networkInter.DisconnectDevice(QDBusObjectPath(devPath));
 }
 
 void NetworkWorker::createApConfig(const QString &devPath, const QString &apPath)

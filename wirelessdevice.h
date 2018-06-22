@@ -44,31 +44,41 @@ public:
 
     bool supportHotspot() const;
     const QString hotspotUuid() const;
-    inline bool hotspotEnabled() const { return !m_hotspotInfo.isEmpty(); }
-    inline QString activeApName() const { return activeApInfo()["ConnectionName"].toString(); }
-    const QJsonObject activeApInfo() const { return m_activeApInfo; }
+    inline bool hotspotEnabled() const { return !m_activeHotspotInfo.isEmpty(); }
+    const QJsonObject activeConnectionInfo() const { return m_activeConnInfo; }
+    inline const QString activeConnName() const { return m_activeConnInfo.value("ConnectionName").toString(); }
+    const QList<QJsonObject> connections() const { return m_connections; }
 
     const QJsonArray apList() const;
-    int activeApStrgength() const;
+    inline const QJsonObject activeApInfo() const { return m_activeApInfo; }
+    /* TODO: remove */
+    //inline QString activeApName() const { return m_activeApInfo.value("Ssid").toString(); }
+    //inline int activeApStrgength() const { return m_activeApInfo.value("Strength").toInt(); }
 
 Q_SIGNALS:
     void apAdded(const QJsonObject &apInfo) const;
     void apInfoChanged(const QJsonObject &apInfo) const;
     void apRemoved(const QJsonObject &apInfo) const;
-    void activeApChanged(const QJsonObject &oldApInfo, const QJsonObject &newApInfo) const;
+    void activeApInfoChanged(const QJsonObject &activeApInfo) const;
+    void activeConnectionChanged(const QJsonObject &oldConnInfo, const QJsonObject &newConnInfo) const;
     void hotspotEnabledChanged(const bool enabled) const;
+    void needSecrets(const QString &info);
+    void needSecretsFinished(const QString &info0, const QString &info1);
 
 public Q_SLOTS:
     void setAPList(const QString &apList);
     void updateAPInfo(const QString &apInfo);
     void deleteAP(const QString &apInfo);
-    void setActiveApInfo(const QJsonObject &apInfo);
-    void setHotspotInfo(const QJsonObject &hotspotInfo);
+    void setActiveConnectionInfo(const QJsonObject &activeConnInfo);
+    void setActiveHotspotInfo(const QJsonObject &hotspotInfo);
+    void setConnections(const QList<QJsonObject> connections);
 
 private:
+    QJsonObject m_activeConnInfo;
     QJsonObject m_activeApInfo;
-    QJsonObject m_hotspotInfo;
+    QJsonObject m_activeHotspotInfo;
     QMap<QString, QJsonObject> m_apsMap;
+    QList<QJsonObject> m_connections;
 };
 
 }
