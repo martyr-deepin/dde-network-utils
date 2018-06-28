@@ -51,9 +51,6 @@ public:
 
     const QJsonArray apList() const;
     inline const QJsonObject activeApInfo() const { return m_activeApInfo; }
-    /* TODO: remove */
-    //inline QString activeApName() const { return m_activeApInfo.value("Ssid").toString(); }
-    //inline int activeApStrgength() const { return m_activeApInfo.value("Strength").toInt(); }
 
 Q_SIGNALS:
     void apAdded(const QJsonObject &apInfo) const;
@@ -72,6 +69,7 @@ public Q_SLOTS:
     void setActiveConnectionInfo(const QJsonObject &activeConnInfo);
     void setActiveHotspotInfo(const QJsonObject &hotspotInfo);
     void setConnections(const QList<QJsonObject> connections);
+    void updateActiveApByName(const QString &ssid);
 
 private:
     QJsonObject m_activeConnInfo;
