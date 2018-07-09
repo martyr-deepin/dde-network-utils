@@ -48,6 +48,7 @@ public:
     explicit NetworkWorker(NetworkModel *model, QObject *parent = 0);
 
     void active();
+    void deactive();
 
 public Q_SLOTS:
     void activateConnection(const QString &devPath, const QString &uuid);

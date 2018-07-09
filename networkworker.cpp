@@ -53,22 +53,36 @@ NetworkWorker::NetworkWorker(NetworkModel *model, QObject *parent)
     connect(m_chainsInter, &ProxyChains::UserChanged, model, &NetworkModel::onChainsUserChanged);
     connect(m_chainsInter, &ProxyChains::PortChanged, model, &NetworkModel::onChainsPortChanged);
 
+    m_networkInter.setSync(false);
+    m_chainsInter->setSync(false);
+
+    active();
+}
+
+void NetworkWorker::active()
+{
+    m_networkInter.blockSignals(false);
+
     m_networkModel->onDeviceListChanged(m_networkInter.devices());
     m_networkModel->onConnectionListChanged(m_networkInter.connections());
     m_networkModel->onVPNEnabledChanged(m_networkInter.vpnEnabled());
     m_networkModel->onActiveConnectionsChanged(m_networkInter.activeConnections());
 
-    m_networkInter.setSync(false);
-    m_chainsInter->setSync(false);
-
     queryActiveConnInfo();
+
+    for (auto device : m_networkModel->devices()) {
+        if (device->type() == NetworkDevice::Wireless) {
+            queryAccessPoints(device->path());
+        }
+    }
+
+    const bool isAppProxyVaild = QProcess::execute("which", QStringList() << "/usr/bin/proxychains4") == 0;
+    m_networkModel->onAppProxyExistChanged(isAppProxyVaild);
 }
 
-void NetworkWorker::active()
+void NetworkWorker::deactive()
 {
-    const bool isAppProxyVaild = QProcess::execute("which", QStringList() << "/usr/bin/proxychains4") == 0;
-
-    m_networkModel->onAppProxyExistChanged(isAppProxyVaild);
+    m_networkInter.blockSignals(true);
 }
 
 void NetworkWorker::setVpnEnable(const bool enable)
