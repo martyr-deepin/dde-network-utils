@@ -23,8 +23,6 @@ HEADERS += \
     $$PWD/wirelessdevice.h \
     $$PWD/wireddevice.h
 
-target.path = /usr/lib
-
 includes.files += *.h
 includes.files += \
     $$PWD/NetworkModel \
@@ -33,7 +31,22 @@ includes.files += \
     $$PWD/WirelessDevice \
     $$PWD/WiredDevice
 
-includes.path = /usr/include/libddenetworkutils
+isEmpty(PREFIX) {
+    PREFIX = /usr
+}
+
+# Automating generation .qm files from .ts files
+CONFIG(release, debug|release) {
+    !system($$PWD/translate_generation.sh): error("Failed to generate translation")
+}
+
+target.path = $$PREFIX/lib
+includes.path = $$PREFIX/include/libddenetworkutils
+
+qm_files.path = $${PREFIX}/share/dde-network-utils/translations/
+qm_files.files = translations/*.qm
+
+TRANSLATIONS = translations/dde-control-center.ts
 
 QMAKE_PKGCONFIG_NAME = libddenetworkutils
 QMAKE_PKGCONFIG_DESCRIPTION = libddenetworkutils
@@ -41,7 +54,4 @@ QMAKE_PKGCONFIG_INCDIR = $$includes.path
 QMAKE_PKGCONFIG_LIBDIR = $$target.path
 QMAKE_PKGCONFIG_DESTDIR = pkgconfig
 
-INSTALLS += includes target
-
-SUBDIRS += \
-    dde-network-utils.pro
+INSTALLS += includes target qm_files
