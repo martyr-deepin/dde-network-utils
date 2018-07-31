@@ -161,6 +161,11 @@ void NetworkWorker::queryProxy(const QString &type)
     connect(w, &QDBusPendingCallWatcher::finished, this, &NetworkWorker::queryProxyCB);
 }
 
+void NetworkWorker::requestWirelessScan()
+{
+    m_networkInter.RequestWirelessScan();
+}
+
 void NetworkWorker::queryChains()
 {
     m_networkModel->onChainsTypeChanged(m_chainsInter->type());
