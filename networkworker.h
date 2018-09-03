@@ -85,6 +85,7 @@ public Q_SLOTS:
     void cancelSecret(const QString &connectionPath, const QString &settingName);
 
 private Q_SLOTS:
+    void activateAccessPointCB(QDBusPendingCallWatcher *w);
     void queryAutoProxyCB(QDBusPendingCallWatcher *w);
     void queryProxyCB(QDBusPendingCallWatcher *w);
     void queryProxyMethodCB(QDBusPendingCallWatcher *w);

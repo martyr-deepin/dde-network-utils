@@ -135,6 +135,20 @@ const QJsonObject NetworkModel::connectionByUuid(const QString &uuid) const
     return QJsonObject();
 }
 
+void NetworkModel::onActivateAccessPointDone(const QString &devPath, const QString &apPath, const QString &uuid, const QDBusObjectPath path)
+{
+    for (auto const dev : m_devices)
+    {
+        if (dev->type() != NetworkDevice::Wireless || dev->path() != devPath)
+            continue;
+
+        if (path.path().isEmpty()) {
+            Q_EMIT static_cast<WirelessDevice *>(dev)->activateAccessPointFailed(apPath, uuid);
+            return;
+        }
+    }
+}
+
 void NetworkModel::onVPNEnabledChanged(const bool enabled)
 {
     if (m_vpnEnabled != enabled)

@@ -310,7 +310,23 @@ void NetworkWorker::activateConnection(const QString &devPath, const QString &uu
 
 void NetworkWorker::activateAccessPoint(const QString &devPath, const QString &apPath, const QString &uuid)
 {
-    m_networkInter.ActivateAccessPoint(uuid, QDBusObjectPath(apPath), QDBusObjectPath(devPath));
+    QDBusPendingCallWatcher *w = new QDBusPendingCallWatcher(m_networkInter.ActivateAccessPoint(uuid, QDBusObjectPath(apPath), QDBusObjectPath(devPath)));
+
+    w->setProperty("devPath", devPath);
+    w->setProperty("apPath", apPath);
+    w->setProperty("uuid", uuid);
+
+    connect(w, &QDBusPendingCallWatcher::finished, this, &NetworkWorker::activateAccessPointCB);
+}
+
+void NetworkWorker::activateAccessPointCB(QDBusPendingCallWatcher *w)
+{
+    QDBusPendingReply<QDBusObjectPath> reply = *w;
+
+    m_networkModel->onActivateAccessPointDone(w->property("devPath").toString(),
+            w->property("apPath").toString(), w->property("uuid").toString(), reply.value());
+
+    w->deleteLater();
 }
 
 void NetworkWorker::queryAutoProxyCB(QDBusPendingCallWatcher *w)

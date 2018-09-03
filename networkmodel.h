@@ -105,6 +105,7 @@ Q_SIGNALS:
     void needSecretsFinished(const QString &info0, const QString &info1);
 
 private Q_SLOTS:
+    void onActivateAccessPointDone(const QString &devPath, const QString &apPath, const QString &uuid, const QDBusObjectPath path);
     void onVPNEnabledChanged(const bool enabled);
     void onAppProxyExistChanged(bool appProxyExist);
     void onProxiesChanged(const QString &type, const QString &url, const uint port);

@@ -66,6 +66,7 @@ Q_SIGNALS:
     void hotspotEnabledChanged(const bool enabled) const;
     void needSecrets(const QString &info);
     void needSecretsFinished(const QString &info0, const QString &info1);
+    void activateAccessPointFailed(const QString &apPath, const QString &uuid);
 
 public Q_SLOTS:
     void setAPList(const QString &apList);
