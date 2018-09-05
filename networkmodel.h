@@ -111,7 +111,7 @@ private Q_SLOTS:
     void onAutoProxyChanged(const QString &proxy);
     void onProxyMethodChanged(const QString &proxyMethod);
     void onProxyIgnoreHostsChanged(const QString &hosts);
-    void onDeviceListChanged(const QString &devices);
+    void onDevicesChanged(const QString &devices);
     void onConnectionListChanged(const QString &conns);
     void onActiveConnInfoChanged(const QString &conns);
     void onActiveConnectionsChanged(const QString &conns);

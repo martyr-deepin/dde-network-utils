@@ -192,11 +192,13 @@ void NetworkModel::onProxyIgnoreHostsChanged(const QString &hosts)
     }
 }
 
-void NetworkModel::onDeviceListChanged(const QString &devices)
+void NetworkModel::onDevicesChanged(const QString &devices)
 {
     const QJsonObject data = QJsonDocument::fromJson(devices.toUtf8()).object();
 
     QSet<QString> devSet;
+
+    bool changed = false;
 
     for (auto it(data.constBegin()); it != data.constEnd(); ++it) {
         const auto type = parseDeviceType(it.key());
@@ -218,6 +220,8 @@ void NetworkModel::onDeviceListChanged(const QString &devices)
             NetworkDevice *d = device(path);
             if (!d)
             {
+                changed = true;
+
                 switch (type)
                 {
                 case NetworkDevice::Wireless:   d = new WirelessDevice(info, this);      break;
@@ -244,9 +248,16 @@ void NetworkModel::onDeviceListChanged(const QString &devices)
 
     for (auto const r : removeList)
         m_devices.removeOne(r);
+
+    if (!removeList.isEmpty()) {
+        changed = true;
+    }
+
     qDeleteAll(removeList);
 
-    Q_EMIT deviceListChanged(m_devices);
+    if (changed) {
+        Q_EMIT deviceListChanged(m_devices);
+    }
 }
 
 void NetworkModel::onConnectionListChanged(const QString &conns)
