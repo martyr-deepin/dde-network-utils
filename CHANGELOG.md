@@ -1,3 +1,14 @@
+<a name="0.0.5"></a>
+## 0.0.5 (2018-09-10)
+
+
+#### Bug Fixes
+
+*   new device connections is empty ([f15fd1d9](f15fd1d9))
+*   devices list changed signal ([6f95ea9b](6f95ea9b))
+
+
+
 <a name="0.0.4"></a>
 ### 0.0.4 (2018-07-31)
 
