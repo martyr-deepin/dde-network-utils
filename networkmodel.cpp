@@ -95,9 +95,6 @@ const QJsonObject NetworkModel::activeConnObjectByUuid(const QString &uuid) cons
 
 const QString NetworkModel::connectionUuidByApInfo(const WirelessDevice * const wdev, const QString &ssid) const
 {
-    if (wdev->status() == NetworkDevice::Activated)
-        return activeConnUuidByInfo(wdev->path(), ssid);
-
     for (const auto &list : m_connections)
     {
         for (const auto &cfg : list)
