@@ -44,7 +44,10 @@ public:
 
     void setConnections(const QList<QString> &connections);
     const QList<QString> connections() const { return m_connections; }
-    const QJsonObject activeConnection() const { return m_activeConnection; }
+    inline const QJsonObject activeConnection() const { return m_activeConnection; }
+    inline const QString activeConnName() const { return m_activeConnection.value("ConnectionName").toString(); }
+    inline const QString activeConnUuid() const { return m_activeConnection.value("ConnectionUuid").toString(); }
+    inline const QString activeConnSettingPath() const { return m_activeConnection.value("SettingPath").toString(); }
 
 Q_SIGNALS:
     void connectionsChanged(const QList<QString> &connPaths) const;

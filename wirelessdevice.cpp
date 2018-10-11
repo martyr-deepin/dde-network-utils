@@ -70,8 +70,8 @@ void WirelessDevice::setAPList(const QString &apList)
         const QString &path = ap.value("Path").toString();
 
         if (!path.isEmpty()) {
-            if (ap.value("Ssid").toString() == activeConnName() &&
-                    ap.value("Strength").toInt() > m_activeApInfo.value("Strength").toInt()) {
+            if (ap.value("Ssid").toString() == activeApSsid() &&
+                    ap.value("Strength").toInt() > activeApStrength()) {
                 m_activeApInfo = ap;
                 Q_EMIT activeApInfoChanged(m_activeApInfo);
             }
@@ -92,6 +92,8 @@ void WirelessDevice::setAPList(const QString &apList)
             Q_EMIT apRemoved(apsMapOld.value(path));
         }
     }
+
+    setActiveApBySsid(activeApSsidByActiveConnUuid(activeConnUuid()));
 }
 
 void WirelessDevice::updateAPInfo(const QString &apInfo)
@@ -100,8 +102,8 @@ void WirelessDevice::updateAPInfo(const QString &apInfo)
     const auto &path = ap.value("Path").toString();
 
     if (!path.isEmpty()) {
-        if (ap.value("Ssid").toString() == activeConnName() &&
-                ap.value("Strength").toInt() > m_activeApInfo.value("Strength").toInt()) {
+        if (ap.value("Ssid").toString() == activeApSsid() &&
+                ap.value("Strength").toInt() > activeApStrength()) {
             m_activeApInfo = ap;
             Q_EMIT activeApInfoChanged(m_activeApInfo);
         }
@@ -136,14 +138,14 @@ void WirelessDevice::setActiveConnectionInfo(const QJsonObject &activeConnInfo)
         const QJsonObject oldConnInfo = m_activeConnInfo;
         m_activeConnInfo = activeConnInfo;
 
-        Q_EMIT activeConnectionChanged(oldConnInfo, m_activeConnInfo);
-
         if (m_activeConnInfo.isEmpty()) {
             m_activeApInfo = QJsonObject();
             Q_EMIT activeApInfoChanged(m_activeApInfo);
         } else {
-            updateActiveApByName(m_activeConnInfo.value("ConnectionName").toString());
+            setActiveApBySsid(activeApSsidByActiveConnUuid(activeConnUuid()));
         }
+
+        Q_EMIT activeConnectionChanged(oldConnInfo, m_activeConnInfo);
     }
 }
 
@@ -164,7 +166,7 @@ void WirelessDevice::setConnections(const QList<QJsonObject> connections)
     m_connections = connections;
 }
 
-void WirelessDevice::updateActiveApByName(const QString &ssid)
+void WirelessDevice::setActiveApBySsid(const QString &ssid)
 {
     if (m_apsMap.size() > 0) {
         // get the use same ssid Aps
@@ -178,11 +180,25 @@ void WirelessDevice::updateActiveApByName(const QString &ssid)
         // set active Ap by strength
         if (sameSsidAps.size() > 0) {
             for (const auto &ap : sameSsidAps) {
-                if (m_activeApInfo.value("Strength").toInt() < ap.value("Strength").toInt()) {
+                if (activeApStrength() < ap.value("Strength").toInt()) {
                     m_activeApInfo = ap;
                 }
             }
             Q_EMIT activeApInfoChanged(m_activeApInfo);
         }
     }
+}
+
+QString WirelessDevice::activeApSsidByActiveConnUuid(const QString &activeConnUuid)
+{
+    QString activeApSsid("");
+
+    for (const QJsonObject &conn : m_connections) {
+        if (conn.value("Uuid").toString() == activeConnUuid) {
+            activeApSsid = conn.value("Ssid").toString();
+            break;
+        }
+    }
+
+    return activeApSsid;
 }

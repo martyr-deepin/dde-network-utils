@@ -47,10 +47,15 @@ public:
     inline bool hotspotEnabled() const { return !m_activeHotspotInfo.isEmpty(); }
     const QJsonObject activeConnectionInfo() const { return m_activeConnInfo; }
     inline const QString activeConnName() const { return m_activeConnInfo.value("ConnectionName").toString(); }
+    inline const QString activeConnUuid() const { return m_activeConnInfo.value("ConnectionUuid").toString(); }
+    inline const QString activeConnSettingPath() const { return m_activeConnInfo.value("SettingPath").toString(); }
     const QList<QJsonObject> connections() const { return m_connections; }
 
     const QJsonArray apList() const;
     inline const QJsonObject activeApInfo() const { return m_activeApInfo; }
+    inline const QString activeApSsid() const { return m_activeApInfo.value("Ssid").toString(); }
+    inline const QString activeApPath() const { return m_activeApInfo.value("Path").toString(); }
+    inline int activeApStrength() const { return m_activeApInfo.value("Strength").toInt(); }
 
 Q_SIGNALS:
     void apAdded(const QJsonObject &apInfo) const;
@@ -69,7 +74,10 @@ public Q_SLOTS:
     void setActiveConnectionInfo(const QJsonObject &activeConnInfo);
     void setActiveHotspotInfo(const QJsonObject &hotspotInfo);
     void setConnections(const QList<QJsonObject> connections);
-    void updateActiveApByName(const QString &ssid);
+    void setActiveApBySsid(const QString &ssid);
+
+private:
+    QString activeApSsidByActiveConnUuid(const QString &activeConnUuid);
 
 private:
     QJsonObject m_activeConnInfo;
