@@ -1,3 +1,14 @@
+<a name="0.0.6"></a>
+### 0.0.6 (2018-10-25)
+
+
+#### Bug Fixes
+
+*   active connection identify ([345cccbf](345cccbf))
+*   get connection uuid by ap's ssid ([8cec5877](8cec5877))
+
+
+
 <a name="0.0.5"></a>
 ## 0.0.5 (2018-09-10)
 
