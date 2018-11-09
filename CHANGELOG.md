@@ -1,3 +1,13 @@
+<a name="0.0.7"></a>
+## 0.0.7 (2018-11-09)
+
+
+#### Bug Fixes
+
+*   active connection info of device may not set ([ade29a08](ade29a08))
+
+
+
 <a name="0.0.6"></a>
 ### 0.0.6 (2018-10-25)
 
