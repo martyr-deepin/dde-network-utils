@@ -35,6 +35,8 @@
 
 using namespace dde::network;
 
+Connectivity NetworkModel::m_Connectivity(Connectivity::Full);
+
 NetworkDevice::DeviceType parseDeviceType(const QString &type)
 {
     if (type == "wireless") {
@@ -514,6 +516,16 @@ void NetworkModel::onNeedSecretsFinished(const QString &info0, const QString &in
     //}
 
     Q_EMIT needSecretsFinished(info0, info1);
+}
+
+void NetworkModel::onConnectivityChanged(int connectivity)
+{
+    Connectivity conn = static_cast<Connectivity>(connectivity);
+
+    if (m_Connectivity != conn) {
+        m_Connectivity = conn;
+        Q_EMIT connectivityChanged(m_Connectivity);
+    }
 }
 
 bool NetworkModel::containsDevice(const QString &devPath) const

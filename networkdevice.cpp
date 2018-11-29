@@ -24,11 +24,14 @@
  */
 
 #include "networkdevice.h"
+#include "networkmodel.h"
 
 #include <QDebug>
 #include <QJsonArray>
 #include <QJsonValue>
 #include <QJsonDocument>
+
+#define MaxQueueSize 4
 
 using namespace dde::network;
 
@@ -67,9 +70,22 @@ void NetworkDevice::setDeviceStatus(const int status)
     {
         m_status = stat;
 
+        enqueueStatus(m_status);
+
         Q_EMIT statusChanged(m_status);
         Q_EMIT statusChanged(statusString());
+        Q_EMIT statusQueueChanged(m_statusQueue);
     }
+}
+
+// prepre-status, pre-status, now-status
+void NetworkDevice::enqueueStatus(NetworkDevice::DeviceStatus status)
+{
+    if (m_statusQueue.size() == MaxQueueSize) {
+        m_statusQueue.dequeue();
+    }
+
+    m_statusQueue.enqueue(status);
 }
 
 const QString NetworkDevice::statusString() const
@@ -93,15 +109,67 @@ const QString NetworkDevice::statusString() const
     return QString();
 }
 
+const QString NetworkDevice::statusStringDetail() const
+{
+    if (!m_enabled) {
+        return tr("Device disabled");
+    }
+
+    if (m_status == DeviceStatus::Activated && NetworkModel::connectivity() != Connectivity::Full) {
+        return tr("Connected but not Internet access");
+    }
+
+    if (obtainIpFailed()) {
+        return tr("Failed to obtain IP address");
+    }
+
+    switch (m_status)
+    {
+    case Unknow:
+    case Unmanaged:
+    case Unavailable: {
+        switch (m_type) {
+        case DeviceType::None: return QString();
+        case DeviceType::Wired: return tr("Network cable unplugged");
+        default:;
+        }
+    }
+    case Disconnected:  return tr("Not connected");
+    case Prepare:
+    case Config:        return tr("Connecting");
+    case NeedAuth:      return tr("Authenticating");
+    case IpConfig:
+    case IpCheck:
+    case Secondaries:   return tr("Obtaining IP address");
+    case Activated:     return tr("Connected");
+    case Deactivation:
+    case Failed:        return tr("Failed");
+    default:;
+    }
+
+    return QString();
+}
+
 NetworkDevice::~NetworkDevice()
 {
     Q_EMIT removed();
+}
+
+bool NetworkDevice::obtainIpFailed() const
+{
+    // 判断为获取IP地址失败需要以下条件
+    return (m_statusQueue.size() == MaxQueueSize
+            && m_statusQueue.at(MaxQueueSize - 1) == DeviceStatus::Disconnected // 最后(当前)一个状态为未连接
+            && m_statusQueue.at(MaxQueueSize - 2) == DeviceStatus::Failed // 上一个状态为失败
+            && m_statusQueue.contains(DeviceStatus::Config) // 包含Config和IpConfig
+            && m_statusQueue.contains(DeviceStatus::IpConfig));
 }
 
 void NetworkDevice::setEnabled(const bool enabled)
 {
     if (m_enabled != enabled) {
         m_enabled = enabled;
+        m_statusQueue.clear();
         Q_EMIT enableChanged(m_enabled);
     }
 }

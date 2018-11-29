@@ -45,6 +45,15 @@ struct ProxyConfig
     QString password;
 };
 
+enum Connectivity
+{
+    UnknownConnectivity = 0,
+    NoConnectivity = 1,
+    Portal = 2,
+    Limited = 3,
+    Full = 4
+};
+
 class NetworkDevice;
 class NetworkWorker;
 class WirelessDevice;
@@ -61,6 +70,8 @@ public:
 
     bool vpnEnabled() const { return m_vpnEnabled; }
     bool appProxyExist() const { return m_appProxyExist; }
+
+    static Connectivity connectivity() { return m_Connectivity; }
 
     const ProxyConfig proxy(const QString &type) const { return m_proxies[type]; }
     const QString autoProxy() const { return m_autoProxy; }
@@ -103,6 +114,7 @@ Q_SIGNALS:
     void appProxyExistChanged(const bool appProxyExist) const;
     void needSecrets(const QString &info);
     void needSecretsFinished(const QString &info0, const QString &info1);
+    void connectivityChanged(const Connectivity connectivity) const;
 
 private Q_SLOTS:
     void onActivateAccessPointDone(const QString &devPath, const QString &apPath, const QString &uuid, const QDBusObjectPath path);
@@ -129,6 +141,7 @@ private Q_SLOTS:
     void onChainsPasswdChanged(const QString &passwd);
     void onNeedSecrets(const QString &info);
     void onNeedSecretsFinished(const QString &info0, const QString &info1);
+    void onConnectivityChanged(int connectivity);
 
 private:
     bool containsDevice(const QString &devPath) const;
@@ -138,6 +151,7 @@ private:
 private:
     bool m_vpnEnabled;
     bool m_appProxyExist;
+
     QString m_proxyMethod;
     QString m_proxyIgnoreHosts;
     QString m_autoProxy;
@@ -149,6 +163,8 @@ private:
     QMap<QString, ProxyConfig> m_proxies;
     QMap<QString, QList<QJsonObject>> m_connections;
     NetworkDevice *m_lastSecretDevice;
+
+    static Connectivity m_Connectivity;
 };
 
 }   // namespace network

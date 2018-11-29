@@ -29,6 +29,7 @@
 #include <QObject>
 #include <QJsonObject>
 #include <QSet>
+#include <QQueue>
 
 namespace dde {
 
@@ -69,9 +70,12 @@ public:
     virtual ~NetworkDevice();
 
     bool enabled() const { return m_enabled; }
+    bool obtainIpFailed() const;
     DeviceType type() const { return m_type; }
     DeviceStatus status() const { return m_status; }
+    QQueue<DeviceStatus> statusQueue() const { return m_statusQueue; }
     const QString statusString() const;
+    const QString statusStringDetail() const;
     const QJsonObject info() const { return m_deviceInfo; }
     const QString path() const;
     const QString realHwAdr() const;
@@ -81,6 +85,7 @@ Q_SIGNALS:
     void removed() const;
     void statusChanged(DeviceStatus stat) const;
     void statusChanged(const QString &statStr) const;
+    void statusQueueChanged(const QQueue<DeviceStatus> &statusQueue) const;
     void enableChanged(const bool enabled) const;
     void sessionCreated(const QString &sessionPath) const;
 
@@ -93,10 +98,12 @@ protected:
 
 private Q_SLOTS:
     void setDeviceStatus(const int status);
+    void enqueueStatus(DeviceStatus status);
 
 private:
     const DeviceType m_type;
     DeviceStatus m_status;
+    QQueue<DeviceStatus> m_statusQueue;
     QJsonObject m_deviceInfo;
 
     bool m_enabled;
