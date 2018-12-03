@@ -1,3 +1,13 @@
+<a name="0.0.8"></a>
+## 0.0.8 (2018-12-03)
+
+
+#### Features
+
+*   more detailed device status string ([238b2711](238b2711))
+
+
+
 <a name="0.0.7"></a>
 ## 0.0.7 (2018-11-09)
 
