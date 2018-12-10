@@ -116,7 +116,7 @@ const QString NetworkDevice::statusStringDetail() const
     }
 
     if (m_status == DeviceStatus::Activated && NetworkModel::connectivity() != Connectivity::Full) {
-        return tr("Connected but not Internet access");
+        return tr("Connected but no Internet access");
     }
 
     if (obtainIpFailed()) {
