@@ -38,11 +38,11 @@
     <message>
         <location filename="../networkdevice.cpp" line="115"/>
         <source>Device disabled</source>
-        <translation type="unfinished"/>
+        <translation>Gerät deaktiviert</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="119"/>
-        <source>Connected but not Internet access</source>
+        <source>Connected but no Internet access</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -53,7 +53,7 @@
     <message>
         <location filename="../networkdevice.cpp" line="133"/>
         <source>Network cable unplugged</source>
-        <translation type="unfinished"/>
+        <translation>Netzwerkkabel abgezogen</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="137"/>
@@ -63,7 +63,7 @@
     <message>
         <location filename="../networkdevice.cpp" line="143"/>
         <source>Obtaining IP address</source>
-        <translation type="unfinished"/>
+        <translation>IP-Adresse wird abgerufen</translation>
     </message>
 </context>
 </TS>

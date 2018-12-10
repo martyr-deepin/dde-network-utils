@@ -42,7 +42,7 @@
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="119"/>
-        <source>Connected but not Internet access</source>
+        <source>Connected but no Internet access</source>
         <translation>已连接网络但无法访问互联网</translation>
     </message>
     <message>

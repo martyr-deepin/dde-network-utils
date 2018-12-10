@@ -16,7 +16,7 @@
         <location filename="../networkdevice.cpp" line="100"/>
         <location filename="../networkdevice.cpp" line="140"/>
         <source>Authenticating</source>
-        <translation>Потврђивање</translation>
+        <translation>Аутентификација</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="102"/>
@@ -27,43 +27,43 @@
         <location filename="../networkdevice.cpp" line="103"/>
         <location filename="../networkdevice.cpp" line="144"/>
         <source>Connected</source>
-        <translation>Повезан</translation>
+        <translation>Повезани сте</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="105"/>
         <location filename="../networkdevice.cpp" line="146"/>
         <source>Failed</source>
-        <translation>Неуспело</translation>
+        <translation>Неуспешно</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="115"/>
         <source>Device disabled</source>
-        <translation type="unfinished"/>
+        <translation>Уређај је онемогућен</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="119"/>
-        <source>Connected but not Internet access</source>
-        <translation type="unfinished"/>
+        <source>Connected but no Internet access</source>
+        <translation>Повезани сте, али нема интернета</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="123"/>
         <source>Failed to obtain IP address</source>
-        <translation type="unfinished"/>
+        <translation>Неуспешно прибављање ИП адресе</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="133"/>
         <source>Network cable unplugged</source>
-        <translation type="unfinished"/>
+        <translation>Мрежни кабл је ископчан</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="137"/>
         <source>Not connected</source>
-        <translation>Није повезано</translation>
+        <translation>Нисте повезани</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="143"/>
         <source>Obtaining IP address</source>
-        <translation type="unfinished"/>
+        <translation>Прибављање ИП адресе</translation>
     </message>
 </context>
 </TS>
