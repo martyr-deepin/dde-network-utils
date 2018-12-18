@@ -40,16 +40,20 @@ class WirelessDevice : public NetworkDevice
     Q_OBJECT
 
 public:
-    explicit WirelessDevice(const QJsonObject &info, QObject *parent = 0);
+    explicit WirelessDevice(const QJsonObject &info, QObject *parent = nullptr);
 
     bool supportHotspot() const;
-    const QString hotspotUuid() const;
     inline bool hotspotEnabled() const { return !m_activeHotspotInfo.isEmpty(); }
+    inline QJsonObject activeHotspotInfo() const { return m_activeHotspotInfo; }
+    const QString activeHotspotUuid() const;
+
     const QJsonObject activeConnectionInfo() const { return m_activeConnInfo; }
     inline const QString activeConnName() const { return m_activeConnInfo.value("ConnectionName").toString(); }
     inline const QString activeConnUuid() const { return m_activeConnInfo.value("ConnectionUuid").toString(); }
     inline const QString activeConnSettingPath() const { return m_activeConnInfo.value("SettingPath").toString(); }
+
     const QList<QJsonObject> connections() const { return m_connections; }
+    const QList<QJsonObject> hotspotConnections() const { return m_hotspotConnections; }
 
     const QJsonArray apList() const;
     inline const QJsonObject activeApInfo() const { return m_activeApInfo; }
@@ -67,6 +71,8 @@ Q_SIGNALS:
     void needSecrets(const QString &info);
     void needSecretsFinished(const QString &info0, const QString &info1);
     void activateAccessPointFailed(const QString &apPath, const QString &uuid);
+    void connectionsChanged(const QList<QJsonObject> &connections) const;
+    void hostspotConnectionsChanged(const QList<QJsonObject> &connections) const;
 
 public Q_SLOTS:
     void setAPList(const QString &apList);
@@ -74,8 +80,9 @@ public Q_SLOTS:
     void deleteAP(const QString &apInfo);
     void setActiveConnectionInfo(const QJsonObject &activeConnInfo);
     void setActiveHotspotInfo(const QJsonObject &hotspotInfo);
-    void setConnections(const QList<QJsonObject> connections);
     void setActiveApBySsid(const QString &ssid);
+    void setConnections(const QList<QJsonObject> &connections);
+    void setHotspotConnections(const QList<QJsonObject> &hotspotConnections);
 
 private:
     QString activeApSsidByActiveConnUuid(const QString &activeConnUuid);
@@ -86,6 +93,7 @@ private:
     QJsonObject m_activeHotspotInfo;
     QMap<QString, QJsonObject> m_apsMap;
     QList<QJsonObject> m_connections;
+    QList<QJsonObject> m_hotspotConnections;
 };
 
 }

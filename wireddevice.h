@@ -40,17 +40,17 @@ class WiredDevice : public NetworkDevice
     Q_OBJECT
 
 public:
-    explicit WiredDevice(const QJsonObject &info, QObject *parent = 0);
+    explicit WiredDevice(const QJsonObject &info, QObject *parent = nullptr);
 
-    void setConnections(const QList<QString> &connections);
-    const QList<QString> connections() const { return m_connections; }
+    void setConnections(const QList<QJsonObject> &connections);
+    const QList<QJsonObject> connections() const { return m_connections; }
     inline const QJsonObject activeConnection() const { return m_activeConnection; }
     inline const QString activeConnName() const { return m_activeConnection.value("ConnectionName").toString(); }
     inline const QString activeConnUuid() const { return m_activeConnection.value("ConnectionUuid").toString(); }
     inline const QString activeConnSettingPath() const { return m_activeConnection.value("SettingPath").toString(); }
 
 Q_SIGNALS:
-    void connectionsChanged(const QList<QString> &connPaths) const;
+    void connectionsChanged(const QList<QJsonObject> &connections) const;
     void activeConnectionChanged(const QJsonObject &connInfo) const;
 
 public Q_SLOTS:
@@ -58,7 +58,7 @@ public Q_SLOTS:
 
 private:
     QJsonObject m_activeConnection;
-    QList<QString> m_connections;
+    QList<QJsonObject> m_connections;
 };
 
 }

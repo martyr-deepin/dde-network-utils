@@ -64,7 +64,7 @@ class NetworkModel : public QObject
     friend class NetworkWorker;
 
 public:
-    explicit NetworkModel(QObject *parent = 0);
+    explicit NetworkModel(QObject *parent = nullptr);
     ~NetworkModel();
     ProxyConfig getChainsProxy() { return m_chainsProxy;}
 
@@ -87,7 +87,7 @@ public:
     const QSet<QString> activeConnections() const { return m_activeConnections; }
     const QString connectionUuidByPath(const QString &connPath) const;
     const QString connectionNameByPath(const QString &connPath) const;
-    const QString connectionUuidByApInfo(const WirelessDevice * const wdev, const QString &ssid) const;
+    const QString connectionUuidByApInfo(const QJsonObject &apInfo) const;
     const QString activeConnUuidByInfo(const QString &devPath, const QString &id) const;
     const QJsonObject connectionByUuid(const QString &uuid) const;
     const QJsonObject connectionByPath(const QString &connPath) const;
@@ -133,7 +133,6 @@ private Q_SLOTS:
     void onDeviceAPInfoChanged(const QString &device, const QString &apInfo);
     void onDeviceAPRemoved(const QString &device, const QString &apInfo);
     void onDeviceEnableChanged(const QString &device, const bool enabled);
-    void onDeviceConnectionsChanged(const QString &devPath, const QList<QString> &connections);
     void onChainsTypeChanged(const QString &type);
     void onChainsAddrChanged(const QString &addr);
     void onChainsPortChanged(const uint port);

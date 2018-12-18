@@ -95,13 +95,13 @@ const QJsonObject NetworkModel::activeConnObjectByUuid(const QString &uuid) cons
     return QJsonObject();
 }
 
-const QString NetworkModel::connectionUuidByApInfo(const WirelessDevice * const wdev, const QString &ssid) const
+const QString NetworkModel::connectionUuidByApInfo(const QJsonObject &apInfo) const
 {
     for (const auto &list : m_connections)
     {
         for (const auto &cfg : list)
         {
-            if (cfg.value("HwAddress").toString() == wdev->usingHwAdr() && cfg.value("Ssid").toString() == ssid)
+            if (cfg.value("Ssid").toString() == apInfo.value("Ssid").toString())
                 return cfg.value("Uuid").toString();
         }
     }
@@ -274,11 +274,23 @@ void NetworkModel::onDevicesChanged(const QString &devices)
 
 void NetworkModel::onConnectionListChanged(const QString &conns)
 {
-    QMap<QString, QList<QString>> devicesConnectionsList;
+    // m_connections 保存了所有从 NetworkManager 获取到的 connection
+    // m_connections 是一个以连接的类型为键(wired,wireless,vpn,pppoe,etc.), 以此类型的所有连接组成的 list 为值的 map
 
+    // commonConnections 的结构与 m_connection 一样, 但 commenConnection 只保存 "HwAddress" 属性为空的连接,
+    // 一个连接可以通过 "HwAddress" 属性 一对一的与设备关联起来, 因此:
+    // "HwAddress" 属性为空表示此连接所有设备都可以使用, 不为空则表示此连接只属于 "HwAddress" 指定的设备, 其他设备不应该拥有此连接
+
+    // deviceConnections 是一个以连接的 "HwAddress" 属性为键, 以一个 map 为值的 map
+    // 其子 map 的结构也与 m_connection 相同
+    // 这表示 deviceConnections 中的一个键值对代表了一个设备, 及其独有的各种类型的连接
+
+    QMap<QString, QList<QJsonObject>> commonConnections;
+    QMap<QString, QMap<QString, QList<QJsonObject>>> deviceConnections;
+
+    // 解析所有的 connection
     const QJsonObject connsObject = QJsonDocument::fromJson(conns.toUtf8()).object();
-    for (auto it(connsObject.constBegin()); it != connsObject.constEnd(); ++it)
-    {
+    for (auto it(connsObject.constBegin()); it != connsObject.constEnd(); ++it) {
         const auto &connList = it.value().toArray();
         const auto &connType = it.key();
         if (connType.isEmpty())
@@ -286,27 +298,48 @@ void NetworkModel::onConnectionListChanged(const QString &conns)
 
         m_connections[connType].clear();
 
-        for (const auto &connObject : connList)
-        {
+        for (const auto &connObject : connList) {
             const QJsonObject &connection = connObject.toObject();
 
             m_connections[connType].append(connection);
 
             const auto &hwAddr = connection.value("HwAddress").toString();
-            if (!hwAddr.isEmpty())
-                devicesConnectionsList[hwAddr] << connection.value("Path").toString();
+            if (hwAddr.isEmpty()) {
+                commonConnections[connType].append(connection);
+            } else {
+                deviceConnections[hwAddr][connType].append(connection);
+            }
         }
     }
 
-    for (NetworkDevice *dev : m_devices)
-    {
-        if (dev->type() == NetworkDevice::Wired) {
-            WiredDevice *wDev = static_cast<WiredDevice *>(dev);
-            const QString &hwAdr = wDev->realHwAdr();
+    // 将 connections 分配给具体的设备
+    for (NetworkDevice *dev : m_devices) {
+        const QString &hwAddr = dev->realHwAdr();
+        const QMap<QString, QList<QJsonObject>> &connsByType = deviceConnections.value(hwAddr);
+        QList<QJsonObject> destConns;
 
-            wDev->setConnections(devicesConnectionsList[hwAdr]);
-        } else if (dev->type() == NetworkDevice::Wireless) {
-            static_cast<WirelessDevice *>(dev)->setConnections(m_connections.value("wireless"));
+        switch (dev->type()) {
+        case NetworkDevice::Wired: {
+            destConns += commonConnections.value("wired");
+            destConns += connsByType.value("wired");
+            WiredDevice *wdDevice = static_cast<WiredDevice *>(dev);
+            wdDevice->setConnections(destConns);
+            break;
+        }
+        case NetworkDevice::Wireless: {
+            destConns += commonConnections.value("wireless");
+            destConns += connsByType.value("wireless");
+            WirelessDevice *wsDevice = static_cast<WirelessDevice *>(dev);
+            wsDevice->setConnections(destConns);
+
+            destConns.clear();
+            destConns += commonConnections.value("wireless-hotspot");
+            destConns += connsByType.value("wireless-hotspot");
+            wsDevice->setHotspotConnections(destConns);
+            break;
+        }
+        default:
+            break;
         }
     }
 
@@ -320,38 +353,40 @@ void NetworkModel::onActiveConnInfoChanged(const QString &conns)
     QMap<QString, QJsonObject> activeConnInfo;
     QMap<QString, QJsonObject> activeHotspotInfo;
 
+    // parse active connections info and save it by DevicePath
     QJsonArray activeConns = QJsonDocument::fromJson(conns.toUtf8()).array();
     for (const auto &info : activeConns)
     {
         const auto &connInfo = info.toObject();
         const auto &type = connInfo.value("ConnectionType").toString();
-        const auto &macAddr = connInfo.value("HwAddress").toString();
+        const auto &devPath = connInfo.value("Device").toString();
 
-        activeConnInfo[macAddr] = connInfo;
+        activeConnInfo.insert(devPath, connInfo);
         m_activeConnInfos << connInfo;
 
-        if (type == "wireless-hotspot")
-            activeHotspotInfo[macAddr] = connInfo;
+        if (type == "wireless-hotspot") {
+            activeHotspotInfo.insert(devPath, connInfo);
+        }
     }
 
-    // update device active connection info
+    // update device active connection
     for (auto *dev : m_devices)
     {
-        const auto &hwAdr = dev->usingHwAdr();
+        const auto &devPath = dev->path();
 
         switch (dev->type())
         {
         case NetworkDevice::Wired:
         {
             WiredDevice *d = static_cast<WiredDevice *>(dev);
-            d->onActiveConnectionChanged(activeConnInfo[hwAdr]);
+            d->onActiveConnectionChanged(activeConnInfo.value(devPath));
             break;
         }
         case NetworkDevice::Wireless:
         {
             WirelessDevice *d = static_cast<WirelessDevice *>(dev);
-            d->setActiveConnectionInfo(activeConnInfo[hwAdr]);
-            d->setActiveHotspotInfo(activeHotspotInfo.value(hwAdr));
+            d->setActiveConnectionInfo(activeConnInfo.value(devPath));
+            d->setActiveHotspotInfo(activeHotspotInfo.value(devPath));
             break;
         }
         default:;
@@ -443,14 +478,6 @@ void NetworkModel::onDeviceEnableChanged(const QString &device, const bool enabl
     dev->setEnabled(enabled);
 
     Q_EMIT deviceEnableChanged(device, enabled);
-}
-
-void NetworkModel::onDeviceConnectionsChanged(const QString &devPath, const QList<QString> &connections)
-{
-    WiredDevice *dev = static_cast<WiredDevice *>(device(devPath));
-    Q_ASSERT(dev);
-
-    dev->setConnections(connections);
 }
 
 void NetworkModel::onChainsTypeChanged(const QString &type)
