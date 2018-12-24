@@ -157,6 +157,10 @@ NetworkDevice::~NetworkDevice()
 
 bool NetworkDevice::obtainIpFailed() const
 {
+    if (m_statusQueue.isEmpty()) {
+        return false;
+    }
+
     // 判断为获取IP地址失败需要以下条件
     return (m_statusQueue.size() == MaxQueueSize
             && m_statusQueue.at(MaxQueueSize - 1) == DeviceStatus::Disconnected // 最后(当前)一个状态为未连接

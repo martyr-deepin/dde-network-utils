@@ -258,14 +258,16 @@ void NetworkModel::onDevicesChanged(const QString &devices)
             removeList << d;
     }
 
-    for (auto const r : removeList)
+    for (auto const r : removeList) {
         m_devices.removeOne(r);
+        r->deleteLater();
+    }
 
     if (!removeList.isEmpty()) {
         changed = true;
     }
 
-    qDeleteAll(removeList);
+//    qDeleteAll(removeList);
 
     if (changed) {
         Q_EMIT deviceListChanged(m_devices);
