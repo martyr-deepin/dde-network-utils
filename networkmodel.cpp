@@ -521,7 +521,11 @@ void NetworkModel::onChainsPasswdChanged(const QString &passwd)
 }
 void NetworkModel::onNeedSecrets(const QString &info)
 {
-    /* TODO: there is a bug in daemon about var 'info', the value of key "DevicePath" is wrong */
+    /*
+     * TODO: there is a bug in daemon about var 'info', the value of key "DevicePath" is wrong.
+     * here should be EMIT the needSecrets signal of specific device after the bug above fixed
+    */
+
     //const QJsonObject &infoObject = QJsonDocument::fromJson(info.toUtf8()).object();
     //m_lastSecretDevice = device(infoObject.value("DevicePath").toString());
 
@@ -538,6 +542,7 @@ void NetworkModel::onNeedSecrets(const QString &info)
 void NetworkModel::onNeedSecretsFinished(const QString &info0, const QString &info1)
 {
     /* TODO: same as above */
+
     //if (m_lastSecretDevice != nullptr) {
         //Q_EMIT static_cast<WirelessDevice *>(m_lastSecretDevice)->needSecretsFinished(info0, info1);
     //}
