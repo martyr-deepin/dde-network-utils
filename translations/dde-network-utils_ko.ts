@@ -16,7 +16,7 @@
         <location filename="../networkdevice.cpp" line="100"/>
         <location filename="../networkdevice.cpp" line="140"/>
         <source>Authenticating</source>
-        <translation type="unfinished"/>
+        <translation>인증중</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="102"/>
@@ -38,22 +38,22 @@
     <message>
         <location filename="../networkdevice.cpp" line="115"/>
         <source>Device disabled</source>
-        <translation type="unfinished"/>
+        <translation>디바이스 사용해제됨</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="119"/>
         <source>Connected but no Internet access</source>
-        <translation type="unfinished"/>
+        <translation>연결됨, 인터넷 없음</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="123"/>
         <source>Failed to obtain IP address</source>
-        <translation type="unfinished"/>
+        <translation>IP 주소 가져오기 실패</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="133"/>
         <source>Network cable unplugged</source>
-        <translation type="unfinished"/>
+        <translation>네트워크 케이블 제거됨</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="137"/>
@@ -63,7 +63,7 @@
     <message>
         <location filename="../networkdevice.cpp" line="143"/>
         <source>Obtaining IP address</source>
-        <translation type="unfinished"/>
+        <translation>IP 주소 가져오는 중</translation>
     </message>
 </context>
 </TS>

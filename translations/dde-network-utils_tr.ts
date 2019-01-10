@@ -38,22 +38,22 @@
     <message>
         <location filename="../networkdevice.cpp" line="115"/>
         <source>Device disabled</source>
-        <translation>Aygıt devre dışı</translation>
+        <translation>Aygıt Devre Dışı</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="119"/>
         <source>Connected but no Internet access</source>
-        <translation type="unfinished"/>
+        <translation>Bağlı Ancak İnternet Erişimi Yok</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="123"/>
         <source>Failed to obtain IP address</source>
-        <translation>IP adresi alınamadı</translation>
+        <translation>IP Adresi Alınamadı</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="133"/>
         <source>Network cable unplugged</source>
-        <translation>Ağ kablosu çıkarılmış</translation>
+        <translation>Ağ Kablosu Takılı Değil</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="137"/>
@@ -63,7 +63,7 @@
     <message>
         <location filename="../networkdevice.cpp" line="143"/>
         <source>Obtaining IP address</source>
-        <translation>IP adresi alınıyor</translation>
+        <translation>IP Adresi Alınıyor</translation>
     </message>
 </context>
 </TS>

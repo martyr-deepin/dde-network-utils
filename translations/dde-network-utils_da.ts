@@ -43,7 +43,7 @@
     <message>
         <location filename="../networkdevice.cpp" line="119"/>
         <source>Connected but no Internet access</source>
-        <translation type="unfinished"/>
+        <translation>Tilsluttet men ingen internetadgang</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="123"/>
