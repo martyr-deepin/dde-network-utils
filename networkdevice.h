@@ -94,7 +94,7 @@ private Q_SLOTS:
     void updateDeviceInfo(const QJsonObject &devInfo);
 
 protected:
-    explicit NetworkDevice(const DeviceType type, const QJsonObject &info, QObject *parent = 0);
+    explicit NetworkDevice(const DeviceType type, const QJsonObject &info, QObject *parent = nullptr);
 
 private Q_SLOTS:
     void setDeviceStatus(const int status);

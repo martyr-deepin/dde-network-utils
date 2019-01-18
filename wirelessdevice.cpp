@@ -43,7 +43,7 @@ bool WirelessDevice::supportHotspot() const
     return info()["SupportHotspot"].toBool();
 }
 
-const QString WirelessDevice::hotspotUuid() const
+const QString WirelessDevice::activeHotspotUuid() const
 {
     Q_ASSERT(hotspotEnabled());
 
@@ -151,19 +151,12 @@ void WirelessDevice::setActiveConnectionInfo(const QJsonObject &activeConnInfo)
 
 void WirelessDevice::setActiveHotspotInfo(const QJsonObject &hotspotInfo)
 {
-    Q_ASSERT(supportHotspot());
-
     const bool changed = m_activeHotspotInfo.isEmpty() != hotspotInfo.isEmpty();
 
     m_activeHotspotInfo = hotspotInfo;
 
     if (changed)
         Q_EMIT hotspotEnabledChanged(hotspotEnabled());
-}
-
-void WirelessDevice::setConnections(const QList<QJsonObject> connections)
-{
-    m_connections = connections;
 }
 
 void WirelessDevice::setActiveApBySsid(const QString &ssid)
@@ -187,6 +180,20 @@ void WirelessDevice::setActiveApBySsid(const QString &ssid)
             Q_EMIT activeApInfoChanged(m_activeApInfo);
         }
     }
+}
+
+void WirelessDevice::setConnections(const QList<QJsonObject> &connections)
+{
+    m_connections = connections;
+
+    Q_EMIT connectionsChanged(m_connections);
+}
+
+void WirelessDevice::setHotspotConnections(const QList<QJsonObject> &hotspotConnections)
+{
+    m_hotspotConnections = hotspotConnections;
+
+    Q_EMIT hostspotConnectionsChanged(m_hotspotConnections);
 }
 
 QString WirelessDevice::activeApSsidByActiveConnUuid(const QString &activeConnUuid)
