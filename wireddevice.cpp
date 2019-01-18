@@ -35,6 +35,11 @@ WiredDevice::WiredDevice(const QJsonObject &info, QObject *parent)
 
 }
 
+const QList<QJsonObject> WiredDevice::connections() const
+{
+    return m_connections;
+}
+
 void WiredDevice::setConnections(const QList<QJsonObject> &connections)
 {
     m_connections = connections;
@@ -42,9 +47,58 @@ void WiredDevice::setConnections(const QList<QJsonObject> &connections)
     Q_EMIT connectionsChanged(m_connections);
 }
 
-void WiredDevice::onActiveConnectionChanged(const QJsonObject &connInfo)
+const QList<QJsonObject> WiredDevice::activeConnectionsInfo() const
 {
-    m_activeConnection = connInfo;
+    return m_activeConnectionsInfo;
+}
 
-    Q_EMIT activeConnectionChanged(m_activeConnection);
+void WiredDevice::setActiveConnectionsInfo(const QList<QJsonObject> &activeConnInfoList)
+{
+    m_activeConnectionsInfo = activeConnInfoList;
+
+    Q_EMIT activeWiredConnectionChanged(activeWiredConnectionInfo());
+    Q_EMIT activeConnectionsChanged(m_activeConnectionsInfo);
+}
+
+const QList<QJsonObject> WiredDevice::activeVpnConnectionsInfo() const
+{
+    QList<QJsonObject> activeVpns;
+    for (const QJsonObject &activeConn : m_activeConnectionsInfo) {
+        if (activeConn.value("ConnectionType").toString().startsWith("vpn-")) {
+            activeVpns.append(activeConn);
+        }
+    }
+
+    return activeVpns;
+}
+
+const QJsonObject WiredDevice::activeWiredConnectionInfo() const
+{
+    QJsonObject activeWired;
+    for (const QJsonObject &activeConn : m_activeConnectionsInfo) {
+        if (activeConn.value("ConnectionType").toString() == "wired") {
+            activeWired = activeConn;
+            break;
+        }
+    }
+
+    return activeWired;
+}
+
+const QString WiredDevice::activeWiredConnName() const
+{
+    const QJsonObject &conn = activeWiredConnectionInfo();
+    return conn.isEmpty() ? QString() : conn.value("ConnectionName").toString();
+}
+
+const QString WiredDevice::activeWiredConnUuid() const
+{
+    const QJsonObject &conn = activeWiredConnectionInfo();
+    return conn.isEmpty() ? QString() : conn.value("ConnectionUuid").toString();
+}
+
+const QString WiredDevice::activeWiredConnSettingPath() const
+{
+    const QJsonObject &conn = activeWiredConnectionInfo();
+    return conn.isEmpty() ? QString() : conn.value("SettingPath").toString();
 }

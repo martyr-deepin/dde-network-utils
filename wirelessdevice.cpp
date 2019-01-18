@@ -50,6 +50,54 @@ const QString WirelessDevice::activeHotspotUuid() const
     return m_activeHotspotInfo.value("ConnectionUuid").toString();
 }
 
+const QList<QJsonObject> WirelessDevice::activeConnectionsInfo() const
+{
+    return m_activeConnectionsInfo;
+}
+
+const QList<QJsonObject> WirelessDevice::activeVpnConnectionsInfo() const
+{
+    QList<QJsonObject> activeVpns;
+    for (const QJsonObject &activeConn : m_activeConnectionsInfo) {
+        if (activeConn.value("ConnectionType").toString().startsWith("vpn-")) {
+            activeVpns.append(activeConn);
+        }
+    }
+
+    return activeVpns;
+}
+
+const QJsonObject WirelessDevice::activeWirelessConnectionInfo() const
+{
+    QJsonObject activeWireless;
+    for (const QJsonObject &activeConn : m_activeConnectionsInfo) {
+        if (activeConn.value("ConnectionType").toString() == "wireless") {
+            activeWireless = activeConn;
+            break;
+        }
+    }
+
+    return activeWireless;
+}
+
+const QString WirelessDevice::activeWirelessConnName() const
+{
+    const QJsonObject &conn = activeWirelessConnectionInfo();
+    return conn.isEmpty() ? QString() : conn.value("ConnectionName").toString();
+}
+
+const QString WirelessDevice::activeWirelessConnUuid() const
+{
+    const QJsonObject &conn = activeWirelessConnectionInfo();
+    return conn.isEmpty() ? QString() : conn.value("ConnectionUuid").toString();
+}
+
+const QString WirelessDevice::activeWirelessConnSettingPath() const
+{
+    const QJsonObject &conn = activeWirelessConnectionInfo();
+    return conn.isEmpty() ? QString() : conn.value("SettingPath").toString();
+}
+
 const QJsonArray WirelessDevice::apList() const
 {
     QJsonArray apArray;
@@ -93,7 +141,7 @@ void WirelessDevice::setAPList(const QString &apList)
         }
     }
 
-    setActiveApBySsid(activeApSsidByActiveConnUuid(activeConnUuid()));
+    setActiveApBySsid(activeApSsidByActiveConnUuid(activeWirelessConnUuid()));
 }
 
 void WirelessDevice::updateAPInfo(const QString &apInfo)
@@ -131,22 +179,19 @@ void WirelessDevice::deleteAP(const QString &apInfo)
     }
 }
 
-void WirelessDevice::setActiveConnectionInfo(const QJsonObject &activeConnInfo)
+void WirelessDevice::setActiveConnectionsInfo(const QList<QJsonObject> &activeConnsInfo)
 {
-    if (m_activeConnInfo != activeConnInfo)
-    {
-        const QJsonObject oldConnInfo = m_activeConnInfo;
-        m_activeConnInfo = activeConnInfo;
+    m_activeConnectionsInfo = activeConnsInfo;
 
-        if (m_activeConnInfo.isEmpty()) {
-            m_activeApInfo = QJsonObject();
-            Q_EMIT activeApInfoChanged(m_activeApInfo);
-        } else {
-            setActiveApBySsid(activeApSsidByActiveConnUuid(activeConnUuid()));
-        }
-
-        Q_EMIT activeConnectionChanged(oldConnInfo, m_activeConnInfo);
+    if (activeWirelessConnectionInfo().isEmpty()) {
+        m_activeApInfo = QJsonObject();
+        Q_EMIT activeApInfoChanged(m_activeApInfo);
+    } else {
+        setActiveApBySsid(activeApSsidByActiveConnUuid(activeWirelessConnUuid()));
     }
+
+    Q_EMIT activeWirelessConnectionChanged(activeWirelessConnectionInfo());
+    Q_EMIT activeConnectionsChanged(m_activeConnectionsInfo);
 }
 
 void WirelessDevice::setActiveHotspotInfo(const QJsonObject &hotspotInfo)

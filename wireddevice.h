@@ -42,22 +42,23 @@ class WiredDevice : public NetworkDevice
 public:
     explicit WiredDevice(const QJsonObject &info, QObject *parent = nullptr);
 
+    const QList<QJsonObject> connections() const;
     void setConnections(const QList<QJsonObject> &connections);
-    const QList<QJsonObject> connections() const { return m_connections; }
-    inline const QJsonObject activeConnection() const { return m_activeConnection; }
-    inline const QString activeConnName() const { return m_activeConnection.value("ConnectionName").toString(); }
-    inline const QString activeConnUuid() const { return m_activeConnection.value("ConnectionUuid").toString(); }
-    inline const QString activeConnSettingPath() const { return m_activeConnection.value("SettingPath").toString(); }
+    const QList<QJsonObject> activeConnectionsInfo() const;
+    void setActiveConnectionsInfo(const QList<QJsonObject> &activeConnInfoList);
+    const QList<QJsonObject> activeVpnConnectionsInfo() const;
+    const QJsonObject activeWiredConnectionInfo() const;
+    const QString activeWiredConnName() const;
+    const QString activeWiredConnUuid() const;
+    const QString activeWiredConnSettingPath() const;
 
 Q_SIGNALS:
     void connectionsChanged(const QList<QJsonObject> &connections) const;
-    void activeConnectionChanged(const QJsonObject &connInfo) const;
-
-public Q_SLOTS:
-    void onActiveConnectionChanged(const QJsonObject &connInfo);
+    void activeWiredConnectionChanged(const QJsonObject &connInfo) const;
+    void activeConnectionsChanged(const QList<QJsonObject> &activeConnInfoList) const;
 
 private:
-    QJsonObject m_activeConnection;
+    QList<QJsonObject> m_activeConnectionsInfo;
     QList<QJsonObject> m_connections;
 };
 

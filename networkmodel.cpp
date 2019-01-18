@@ -363,7 +363,7 @@ void NetworkModel::onActiveConnInfoChanged(const QString &conns)
         const auto &type = connInfo.value("ConnectionType").toString();
         const auto &devPath = connInfo.value("Device").toString();
 
-        activeConnInfo.insert(devPath, connInfo);
+        activeConnInfo.insertMulti(devPath, connInfo);
         m_activeConnInfos << connInfo;
 
         if (type == "wireless-hotspot") {
@@ -381,13 +381,13 @@ void NetworkModel::onActiveConnInfoChanged(const QString &conns)
         case NetworkDevice::Wired:
         {
             WiredDevice *d = static_cast<WiredDevice *>(dev);
-            d->onActiveConnectionChanged(activeConnInfo.value(devPath));
+            d->setActiveConnectionsInfo(activeConnInfo.values(devPath));
             break;
         }
         case NetworkDevice::Wireless:
         {
             WirelessDevice *d = static_cast<WirelessDevice *>(dev);
-            d->setActiveConnectionInfo(activeConnInfo.value(devPath));
+            d->setActiveConnectionsInfo(activeConnInfo.values(devPath));
             d->setActiveHotspotInfo(activeHotspotInfo.value(devPath));
             break;
         }
