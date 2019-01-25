@@ -1,3 +1,17 @@
+<a name="0.0.9"></a>
+## 0.0.9 (2019-01-25)
+
+
+#### Features
+
+*   there could be multiple active connections for a device ([1077a641](1077a641))
+
+#### Bug Fixes
+
+*   macaddress ([fca6c689](fca6c689))
+
+
+
 <a name="0.0.8.2"></a>
 ## 0.0.8.2 (2018-12-25)
 
