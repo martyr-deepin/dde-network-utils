@@ -86,7 +86,7 @@ const QJsonObject NetworkModel::connectionByPath(const QString &connPath) const
 
 const QJsonObject NetworkModel::activeConnObjectByUuid(const QString &uuid) const
 {
-    for (const auto &info : m_activeConnObjects)
+    for (const auto &info : m_activeConns)
     {
         if (info.value("Uuid").toString() == uuid)
             return info;
@@ -111,7 +111,7 @@ const QString NetworkModel::connectionUuidByApInfo(const QJsonObject &apInfo) co
 
 const QString NetworkModel::activeConnUuidByInfo(const QString &devPath, const QString &id) const
 {
-    for (const auto &info : m_activeConnObjects)
+    for (const auto &info : m_activeConns)
     {
         if (info.value("Id").toString() != id)
             continue;
@@ -400,22 +400,52 @@ void NetworkModel::onActiveConnInfoChanged(const QString &conns)
 
 void NetworkModel::onActiveConnectionsChanged(const QString &conns)
 {
-    m_activeConnections.clear();
-    m_activeConnObjects.clear();
+    m_activeConns.clear();
+
+    // 按照设备分类所有 active 连接
+    QMap<QString, QList<QJsonObject>> deviceActiveConnsMap;
 
     const QJsonObject activeConns = QJsonDocument::fromJson(conns.toUtf8()).object();
     for (auto it(activeConns.constBegin()); it != activeConns.constEnd(); ++it)
     {
         const QJsonObject &info = it.value().toObject();
-        const auto &uuid = info.value("Uuid").toString();
-        if (uuid.isEmpty())
+        if (info.isEmpty())
             continue;
 
-        m_activeConnections << uuid;
-        m_activeConnObjects << info;
+        m_activeConns << info;
+
+        for (const auto &item : info.value("Devices").toArray()) {
+            const QString &devicePath = item.toString();
+            if (devicePath.isEmpty()) {
+                continue;
+            }
+            deviceActiveConnsMap[devicePath] << info;
+        }
     }
 
-    Q_EMIT activeConnectionsChanged(m_activeConnections);
+    // 将 active 连接分配给具体的设备
+    for (auto it(deviceActiveConnsMap.constBegin()); it != deviceActiveConnsMap.constEnd(); ++it) {
+        NetworkDevice *dev = device(it.key());
+        if (dev == nullptr) {
+            continue;
+        }
+        switch (dev->type()) {
+            case NetworkDevice::Wired: {
+                WiredDevice *wdDevice = static_cast<WiredDevice *>(dev);
+                wdDevice->setActiveConnections(it.value());
+                break;
+            }
+            case NetworkDevice::Wireless: {
+                WirelessDevice *wsDevice = static_cast<WirelessDevice *>(dev);
+                wsDevice->setActiveConnections(it.value());
+                break;
+            }
+            default:
+                break;
+        }
+    }
+
+    Q_EMIT activeConnectionsChanged(m_activeConns);
 }
 
 void NetworkModel::onConnectionSessionCreated(const QString &device, const QString &sessionPath)

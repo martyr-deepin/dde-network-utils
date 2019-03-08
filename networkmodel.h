@@ -84,7 +84,7 @@ public:
     const QList<QJsonObject> pppoes() const { return m_connections.value("pppoe"); }
     const QList<QJsonObject> hotspots() const { return m_connections.value("wireless-hotspot"); }
     const QList<QJsonObject> activeConnInfos() const { return m_activeConnInfos; }
-    const QSet<QString> activeConnections() const { return m_activeConnections; }
+    const QList<QJsonObject> activeConns() const { return m_activeConns; }
     const QString connectionUuidByPath(const QString &connPath) const;
     const QString connectionNameByPath(const QString &connPath) const;
     const QString connectionUuidByApInfo(const QJsonObject &apInfo) const;
@@ -101,7 +101,7 @@ Q_SIGNALS:
     void proxyMethodChanged(const QString &proxyMethod) const;
     void proxyIgnoreHostsChanged(const QString &hosts) const;
     void requestDeviceStatus(const QString &devPath) const;
-    void activeConnectionsChanged(const QSet<QString> &conns) const;
+    void activeConnectionsChanged(const QList<QJsonObject> &conns) const;
     void activeConnInfoChanged(const QList<QJsonObject> &infos) const;
     void vpnEnabledChanged(const bool enabled) const;
     void deviceListChanged(const QList<NetworkDevice *> devices) const;
@@ -157,8 +157,7 @@ private:
     ProxyConfig m_chainsProxy;
     QList<NetworkDevice *> m_devices;
     QList<QJsonObject> m_activeConnInfos;
-    QList<QJsonObject> m_activeConnObjects;
-    QSet<QString> m_activeConnections;
+    QList<QJsonObject> m_activeConns;
     QMap<QString, ProxyConfig> m_proxies;
     QMap<QString, QList<QJsonObject>> m_connections;
     NetworkDevice *m_lastSecretDevice;

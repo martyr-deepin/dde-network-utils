@@ -47,6 +47,7 @@ public:
     inline QJsonObject activeHotspotInfo() const { return m_activeHotspotInfo; }
     const QString activeHotspotUuid() const;
 
+    const QList<QJsonObject> activeConnections() const;
     const QList<QJsonObject> activeConnectionsInfo() const;
     const QList<QJsonObject> activeVpnConnectionsInfo() const;
     const QJsonObject activeWirelessConnectionInfo() const;
@@ -68,8 +69,9 @@ Q_SIGNALS:
     void apInfoChanged(const QJsonObject &apInfo) const;
     void apRemoved(const QJsonObject &apInfo) const;
     void activeApInfoChanged(const QJsonObject &activeApInfo) const;
-    void activeWirelessConnectionChanged(const QJsonObject &connInfo) const;
-    void activeConnectionsChanged(const QList<QJsonObject> &activeConnInfoList) const;
+    void activeWirelessConnectionInfoChanged(const QJsonObject &connInfo) const;
+    void activeConnectionsChanged(const QList<QJsonObject> &activeConns) const;
+    void activeConnectionsInfoChanged(const QList<QJsonObject> &activeConnInfoList) const;
     void hotspotEnabledChanged(const bool enabled) const;
     void needSecrets(const QString &info);
     void needSecretsFinished(const QString &info0, const QString &info1);
@@ -81,6 +83,7 @@ public Q_SLOTS:
     void setAPList(const QString &apList);
     void updateAPInfo(const QString &apInfo);
     void deleteAP(const QString &apInfo);
+    void setActiveConnections(const QList<QJsonObject> &activeConns);
     void setActiveConnectionsInfo(const QList<QJsonObject> &activeConnsInfo);
     void setActiveHotspotInfo(const QJsonObject &hotspotInfo);
     void setActiveApBySsid(const QString &ssid);
@@ -91,6 +94,7 @@ private:
     QString activeApSsidByActiveConnUuid(const QString &activeWirelessConnUuid);
 
 private:
+    QList<QJsonObject> m_activeConnections;
     QList<QJsonObject> m_activeConnectionsInfo;
     QJsonObject m_activeApInfo;
     QJsonObject m_activeHotspotInfo;

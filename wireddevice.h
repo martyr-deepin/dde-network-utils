@@ -44,7 +44,9 @@ public:
 
     const QList<QJsonObject> connections() const;
     void setConnections(const QList<QJsonObject> &connections);
+    const QList<QJsonObject> activeConnections() const;
     const QList<QJsonObject> activeConnectionsInfo() const;
+    void setActiveConnections(const QList<QJsonObject> &activeConns);
     void setActiveConnectionsInfo(const QList<QJsonObject> &activeConnInfoList);
     const QList<QJsonObject> activeVpnConnectionsInfo() const;
     const QJsonObject activeWiredConnectionInfo() const;
@@ -54,10 +56,12 @@ public:
 
 Q_SIGNALS:
     void connectionsChanged(const QList<QJsonObject> &connections) const;
-    void activeWiredConnectionChanged(const QJsonObject &connInfo) const;
-    void activeConnectionsChanged(const QList<QJsonObject> &activeConnInfoList) const;
+    void activeWiredConnectionInfoChanged(const QJsonObject &connInfo) const;
+    void activeConnectionsChanged(const QList<QJsonObject> &activeConns) const;
+    void activeConnectionsInfoChanged(const QList<QJsonObject> &activeConnInfoList) const;
 
 private:
+    QList<QJsonObject> m_activeConnections;
     QList<QJsonObject> m_activeConnectionsInfo;
     QList<QJsonObject> m_connections;
 };

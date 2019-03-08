@@ -47,17 +47,29 @@ void WiredDevice::setConnections(const QList<QJsonObject> &connections)
     Q_EMIT connectionsChanged(m_connections);
 }
 
+const QList<QJsonObject> WiredDevice::activeConnections() const
+{
+    return m_activeConnections;
+}
+
 const QList<QJsonObject> WiredDevice::activeConnectionsInfo() const
 {
     return m_activeConnectionsInfo;
+}
+
+void WiredDevice::setActiveConnections(const QList<QJsonObject> &activeConns)
+{
+    m_activeConnections = activeConns;
+
+    Q_EMIT activeConnectionsChanged(m_activeConnections);
 }
 
 void WiredDevice::setActiveConnectionsInfo(const QList<QJsonObject> &activeConnInfoList)
 {
     m_activeConnectionsInfo = activeConnInfoList;
 
-    Q_EMIT activeWiredConnectionChanged(activeWiredConnectionInfo());
-    Q_EMIT activeConnectionsChanged(m_activeConnectionsInfo);
+    Q_EMIT activeWiredConnectionInfoChanged(activeWiredConnectionInfo());
+    Q_EMIT activeConnectionsInfoChanged(m_activeConnectionsInfo);
 }
 
 const QList<QJsonObject> WiredDevice::activeVpnConnectionsInfo() const

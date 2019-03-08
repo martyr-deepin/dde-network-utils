@@ -50,6 +50,11 @@ const QString WirelessDevice::activeHotspotUuid() const
     return m_activeHotspotInfo.value("ConnectionUuid").toString();
 }
 
+const QList<QJsonObject> WirelessDevice::activeConnections() const
+{
+    return m_activeConnections;
+}
+
 const QList<QJsonObject> WirelessDevice::activeConnectionsInfo() const
 {
     return m_activeConnectionsInfo;
@@ -179,6 +184,13 @@ void WirelessDevice::deleteAP(const QString &apInfo)
     }
 }
 
+void WirelessDevice::setActiveConnections(const QList<QJsonObject> &activeConns)
+{
+    m_activeConnections = activeConns;
+
+    Q_EMIT activeConnectionsChanged(m_activeConnections);
+}
+
 void WirelessDevice::setActiveConnectionsInfo(const QList<QJsonObject> &activeConnsInfo)
 {
     m_activeConnectionsInfo = activeConnsInfo;
@@ -190,8 +202,8 @@ void WirelessDevice::setActiveConnectionsInfo(const QList<QJsonObject> &activeCo
         setActiveApBySsid(activeApSsidByActiveConnUuid(activeWirelessConnUuid()));
     }
 
-    Q_EMIT activeWirelessConnectionChanged(activeWirelessConnectionInfo());
-    Q_EMIT activeConnectionsChanged(m_activeConnectionsInfo);
+    Q_EMIT activeWirelessConnectionInfoChanged(activeWirelessConnectionInfo());
+    Q_EMIT activeConnectionsInfoChanged(m_activeConnectionsInfo);
 }
 
 void WirelessDevice::setActiveHotspotInfo(const QJsonObject &hotspotInfo)
