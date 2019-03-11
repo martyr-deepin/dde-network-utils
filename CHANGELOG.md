@@ -1,3 +1,13 @@
+<a name="0.1.0"></a>
+## 0.1.0 (2019-03-11)
+
+
+#### Features
+
+*   distribute active connections to devices ([1aeb456c](1aeb456c))
+
+
+
 <a name="0.0.9"></a>
 ## 0.0.9 (2019-01-25)
 
