@@ -117,7 +117,10 @@ Q_SIGNALS:
     void needSecrets(const QString &info);
     void needSecretsFinished(const QString &info0, const QString &info1);
     void connectivityChanged(const Connectivity connectivity) const;
+
     // Private Signals
+    // Need ensure the checker thread is running
+    // before emit this signal
     void needCheckConnectivitySecondary() const;
 
 private Q_SLOTS:
@@ -170,6 +173,7 @@ private:
     QMap<QString, ProxyConfig> m_proxies;
     QMap<QString, QList<QJsonObject>> m_connections;
 
+    // the connectivity NetworkManager gave last time.
     static Connectivity m_Connectivity;
     static Connectivity m_ConnectivitySecondary;
 };

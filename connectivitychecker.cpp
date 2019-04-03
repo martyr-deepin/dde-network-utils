@@ -24,6 +24,7 @@
 #include <QEventLoop>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QScopedPointer>
 
 static const QStringList CheckUrls {
     "https://www.baidu.com",
@@ -44,7 +45,7 @@ void ConnectivityChecker::startCheck()
     QNetworkAccessManager nam;
 
     for (auto url : CheckUrls) {
-        QNetworkReply *reply = nam.get(QNetworkRequest(QUrl(url)));
+        QScopedPointer<QNetworkReply> reply(nam.get(QNetworkRequest(QUrl(url))));
         qDebug() << "Check connectivity using url:" << url;
 
         // Do not use waitForReadyRead to block thread,
@@ -58,7 +59,6 @@ void ConnectivityChecker::startCheck()
         synchronous.exec();
 
         reply->close();
-        reply->deleteLater();
         if (reply->error() == QNetworkReply::NoError &&
                 reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 200) {
             qDebug() << "Connected to url:" << url;

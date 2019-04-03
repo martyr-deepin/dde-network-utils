@@ -603,6 +603,7 @@ void NetworkModel::onConnectivityChanged(int connectivity)
             m_connectivityCheckThread->start();
         }
         Q_EMIT needCheckConnectivitySecondary();
+        Q_EMIT connectivityChanged(NoConnectivity);
         return;
     }
 
