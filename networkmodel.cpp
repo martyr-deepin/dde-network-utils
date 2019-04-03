@@ -36,6 +36,7 @@
 using namespace dde::network;
 
 Connectivity NetworkModel::m_Connectivity(Connectivity::Full);
+Connectivity NetworkModel::m_ConnectivitySecondary(Connectivity::Full);
 
 NetworkDevice::DeviceType parseDeviceType(const QString &type)
 {
@@ -50,9 +51,17 @@ NetworkDevice::DeviceType parseDeviceType(const QString &type)
 }
 
 NetworkModel::NetworkModel(QObject *parent)
-    : QObject(parent),
-    m_lastSecretDevice(nullptr)
+    : QObject(parent)
+    , m_lastSecretDevice(nullptr)
+    , m_connectivityChecker(new ConnectivityChecker)
+    , m_connectivityCheckThread(new QThread(this))
 {
+    connect(this, &NetworkModel::needCheckConnectivitySecondary,
+            m_connectivityChecker, &ConnectivityChecker::startCheck);
+    connect(m_connectivityChecker, &ConnectivityChecker::checkFinished,
+            this, &NetworkModel::onConnectivitySecondaryCheckFinished);
+
+    m_connectivityChecker->moveToThread(m_connectivityCheckThread);
 }
 
 NetworkModel::~NetworkModel()
@@ -586,10 +595,28 @@ void NetworkModel::onConnectivityChanged(int connectivity)
 {
     Connectivity conn = static_cast<Connectivity>(connectivity);
 
-    if (m_Connectivity != conn) {
-        m_Connectivity = conn;
-        Q_EMIT connectivityChanged(m_Connectivity);
+    // if the connectivity state from NetworkManager become to NotFull
+    // from Full, check it again use our urls
+    if (m_Connectivity == Full && conn != Full) {
+        m_Connectivity = NoConnectivity;
+        if (!m_connectivityCheckThread->isRunning()) {
+            m_connectivityCheckThread->start();
+        }
+        Q_EMIT needCheckConnectivitySecondary();
+        return;
     }
+
+    if (m_Connectivity == NoConnectivity && conn == Full) {
+        m_Connectivity = Full;
+        m_ConnectivitySecondary = Full;
+        Q_EMIT connectivityChanged(Full);
+    }
+}
+
+void NetworkModel::onConnectivitySecondaryCheckFinished(bool connectivity)
+{
+    m_ConnectivitySecondary = connectivity ? Full : NoConnectivity;
+    Q_EMIT connectivityChanged(m_ConnectivitySecondary);
 }
 
 bool NetworkModel::containsDevice(const QString &devPath) const
