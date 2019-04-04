@@ -1,3 +1,13 @@
+<a name="0.1.2"></a>
+## 0.1.2 (2019-04-04)
+
+
+#### Features
+
+*   check network connectivity ([5c044c86](5c044c86))
+
+
+
 <a name="0.1.1"></a>
 ## 0.1.1 (2019-03-27)
 
