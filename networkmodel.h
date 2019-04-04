@@ -27,10 +27,12 @@
 #define NETWORKMODEL_H
 
 #include "networkdevice.h"
+#include "connectivitychecker.h"
 
 #include <QMap>
 #include <QTimer>
 #include <QDBusObjectPath>
+#include <QThread>
 
 namespace dde {
 
@@ -71,7 +73,7 @@ public:
     bool vpnEnabled() const { return m_vpnEnabled; }
     bool appProxyExist() const { return m_appProxyExist; }
 
-    static Connectivity connectivity() { return m_Connectivity; }
+    static Connectivity connectivity() { return m_ConnectivitySecondary; }
 
     const ProxyConfig proxy(const QString &type) const { return m_proxies[type]; }
     const QString autoProxy() const { return m_autoProxy; }
@@ -116,6 +118,11 @@ Q_SIGNALS:
     void needSecretsFinished(const QString &info0, const QString &info1);
     void connectivityChanged(const Connectivity connectivity) const;
 
+    // Private Signals
+    // Need ensure the checker thread is running
+    // before emit this signal
+    void needCheckConnectivitySecondary() const;
+
 private Q_SLOTS:
     void onActivateAccessPointDone(const QString &devPath, const QString &apPath, const QString &uuid, const QDBusObjectPath path);
     void onVPNEnabledChanged(const bool enabled);
@@ -141,6 +148,7 @@ private Q_SLOTS:
     void onNeedSecrets(const QString &info);
     void onNeedSecretsFinished(const QString &info0, const QString &info1);
     void onConnectivityChanged(int connectivity);
+    void onConnectivitySecondaryCheckFinished(bool connectivity);
 
 private:
     bool containsDevice(const QString &devPath) const;
@@ -148,6 +156,10 @@ private:
     void updateWiredConnInfo();
 
 private:
+    NetworkDevice *m_lastSecretDevice;
+    ConnectivityChecker *m_connectivityChecker;
+    QThread *m_connectivityCheckThread;
+
     bool m_vpnEnabled;
     bool m_appProxyExist;
 
@@ -160,9 +172,10 @@ private:
     QList<QJsonObject> m_activeConns;
     QMap<QString, ProxyConfig> m_proxies;
     QMap<QString, QList<QJsonObject>> m_connections;
-    NetworkDevice *m_lastSecretDevice;
 
+    // the connectivity NetworkManager gave last time.
     static Connectivity m_Connectivity;
+    static Connectivity m_ConnectivitySecondary;
 };
 
 }   // namespace network

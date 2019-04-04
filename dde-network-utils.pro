@@ -1,5 +1,5 @@
 QT       -= gui
-QT       += dbus
+QT       += dbus network
 
 TARGET = dde-network-utils
 TEMPLATE = lib
@@ -14,14 +14,16 @@ SOURCES += \
     $$PWD/networkworker.cpp \
     $$PWD/networkdevice.cpp \
     $$PWD/wirelessdevice.cpp \
-    $$PWD/wireddevice.cpp
+    $$PWD/wireddevice.cpp \
+    $$PWD/connectivitychecker.cpp
 
 HEADERS += \
     $$PWD/networkmodel.h \
     $$PWD/networkworker.h \
     $$PWD/networkdevice.h \
     $$PWD/wirelessdevice.h \
-    $$PWD/wireddevice.h
+    $$PWD/wireddevice.h \
+    $$PWD/connectivitychecker.h
 
 includes.files += *.h
 includes.files += \
