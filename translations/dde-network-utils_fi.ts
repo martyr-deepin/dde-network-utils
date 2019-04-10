@@ -4,7 +4,7 @@
     <message>
         <location filename="../networkdevice.cpp" line="97"/>
         <source>Disconnected</source>
-        <translation>Yhteys katkesi</translation>
+        <translation>Katkaistu</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="99"/>
@@ -16,12 +16,12 @@
         <location filename="../networkdevice.cpp" line="100"/>
         <location filename="../networkdevice.cpp" line="140"/>
         <source>Authenticating</source>
-        <translation type="unfinished"/>
+        <translation>Todennus</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="102"/>
         <source>Obtaining Address</source>
-        <translation type="unfinished"/>
+        <translation>Osoitteen haku</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="103"/>
@@ -38,32 +38,32 @@
     <message>
         <location filename="../networkdevice.cpp" line="115"/>
         <source>Device disabled</source>
-        <translation type="unfinished"/>
+        <translation>Laite suljettu</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="119"/>
         <source>Connected but no Internet access</source>
-        <translation type="unfinished"/>
+        <translation>Yhdistetty, mutta ei internet osoitetta</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="123"/>
         <source>Failed to obtain IP address</source>
-        <translation type="unfinished"/>
+        <translation>Virhe hakiessa IP osoitetta</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="133"/>
         <source>Network cable unplugged</source>
-        <translation type="unfinished"/>
+        <translation>Verkkokaapeli ei kytkettynä</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="137"/>
         <source>Not connected</source>
-        <translation type="unfinished"/>
+        <translation>Ei yhteyttä</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="143"/>
         <source>Obtaining IP address</source>
-        <translation type="unfinished"/>
+        <translation>Hakee IP osoitetta</translation>
     </message>
 </context>
 </TS>

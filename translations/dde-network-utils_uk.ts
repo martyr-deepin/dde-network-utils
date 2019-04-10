@@ -38,22 +38,22 @@
     <message>
         <location filename="../networkdevice.cpp" line="115"/>
         <source>Device disabled</source>
-        <translation type="unfinished"/>
+        <translation>Пристрій вимкнено</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="119"/>
         <source>Connected but no Internet access</source>
-        <translation type="unfinished"/>
+        <translation>З&apos;єднано, але доступу до інтернету немає</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="123"/>
         <source>Failed to obtain IP address</source>
-        <translation type="unfinished"/>
+        <translation>Не вдалося отримати IP-адресу</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="133"/>
         <source>Network cable unplugged</source>
-        <translation type="unfinished"/>
+        <translation>Вийнято інтернет-кабель</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="137"/>
@@ -63,7 +63,7 @@
     <message>
         <location filename="../networkdevice.cpp" line="143"/>
         <source>Obtaining IP address</source>
-        <translation type="unfinished"/>
+        <translation>Отримуємо IP-адресу</translation>
     </message>
 </context>
 </TS>

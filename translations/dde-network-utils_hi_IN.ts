@@ -38,22 +38,22 @@
     <message>
         <location filename="../networkdevice.cpp" line="115"/>
         <source>Device disabled</source>
-        <translation type="unfinished"/>
+        <translation>डिवाइस डिसेबल्ड</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="119"/>
         <source>Connected but no Internet access</source>
-        <translation type="unfinished"/>
+        <translation>कनेक्टेड लेकिन इंटरनेट आक्सेस नही है</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="123"/>
         <source>Failed to obtain IP address</source>
-        <translation type="unfinished"/>
+        <translation>IP अड्रेस लाने में विफल रहा</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="133"/>
         <source>Network cable unplugged</source>
-        <translation type="unfinished"/>
+        <translation>नेटवर्क केबल अनप्लग है </translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="137"/>
@@ -63,7 +63,7 @@
     <message>
         <location filename="../networkdevice.cpp" line="143"/>
         <source>Obtaining IP address</source>
-        <translation type="unfinished"/>
+        <translation>IP अड्रेस प्राप्त किया जा रहा है</translation>
     </message>
 </context>
 </TS>
