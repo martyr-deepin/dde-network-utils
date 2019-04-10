@@ -4,24 +4,24 @@
     <message>
         <location filename="../networkdevice.cpp" line="97"/>
         <source>Disconnected</source>
-        <translation type="unfinished"/>
+        <translation>Холболт тасарсан</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="99"/>
         <location filename="../networkdevice.cpp" line="139"/>
         <source>Connecting</source>
-        <translation type="unfinished"/>
+        <translation>Холбогдож байна</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="100"/>
         <location filename="../networkdevice.cpp" line="140"/>
         <source>Authenticating</source>
-        <translation type="unfinished"/>
+        <translation>Баталгаажуулж байна</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="102"/>
         <source>Obtaining Address</source>
-        <translation type="unfinished"/>
+        <translation>Хаягыг авч байна</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="103"/>
@@ -33,37 +33,37 @@
         <location filename="../networkdevice.cpp" line="105"/>
         <location filename="../networkdevice.cpp" line="146"/>
         <source>Failed</source>
-        <translation type="unfinished"/>
+        <translation>Амжилтгүй болсон</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="115"/>
         <source>Device disabled</source>
-        <translation type="unfinished"/>
+        <translation>Төхөөрөмж идэвхгүй болсон</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="119"/>
         <source>Connected but no Internet access</source>
-        <translation type="unfinished"/>
+        <translation>Холбогдсон боловч интернетэд холбогдоогүй байна</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="123"/>
         <source>Failed to obtain IP address</source>
-        <translation type="unfinished"/>
+        <translation>IP хаягийг авч чадсангүй</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="133"/>
         <source>Network cable unplugged</source>
-        <translation type="unfinished"/>
+        <translation>Сүлжээний кабель салгагдсан</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="137"/>
         <source>Not connected</source>
-        <translation type="unfinished"/>
+        <translation>Холбогдоогүй</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="143"/>
         <source>Obtaining IP address</source>
-        <translation type="unfinished"/>
+        <translation>Хаягыг авч байна</translation>
     </message>
 </context>
 </TS>

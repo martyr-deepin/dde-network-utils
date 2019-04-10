@@ -38,12 +38,12 @@
     <message>
         <location filename="../networkdevice.cpp" line="115"/>
         <source>Device disabled</source>
-        <translation type="unfinished"/>
+        <translation>Uređaj je onemogućen</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="119"/>
         <source>Connected but no Internet access</source>
-        <translation type="unfinished"/>
+        <translation>Spojen ali nema pristupa internetu</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="123"/>
@@ -53,7 +53,7 @@
     <message>
         <location filename="../networkdevice.cpp" line="133"/>
         <source>Network cable unplugged</source>
-        <translation type="unfinished"/>
+        <translation>Mrežni kabel je isključen</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="137"/>
