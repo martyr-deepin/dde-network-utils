@@ -73,7 +73,7 @@ public:
     bool vpnEnabled() const { return m_vpnEnabled; }
     bool appProxyExist() const { return m_appProxyExist; }
 
-    static Connectivity connectivity() { return m_ConnectivitySecondary; }
+    static Connectivity connectivity() { return m_Connectivity; }
 
     const ProxyConfig proxy(const QString &type) const { return m_proxies[type]; }
     const QString autoProxy() const { return m_autoProxy; }
@@ -173,9 +173,7 @@ private:
     QMap<QString, ProxyConfig> m_proxies;
     QMap<QString, QList<QJsonObject>> m_connections;
 
-    // the connectivity NetworkManager gave last time.
     static Connectivity m_Connectivity;
-    static Connectivity m_ConnectivitySecondary;
 };
 
 }   // namespace network

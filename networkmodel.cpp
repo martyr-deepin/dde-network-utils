@@ -36,7 +36,6 @@
 using namespace dde::network;
 
 Connectivity NetworkModel::m_Connectivity(Connectivity::Full);
-Connectivity NetworkModel::m_ConnectivitySecondary(Connectivity::Full);
 
 NetworkDevice::DeviceType parseDeviceType(const QString &type)
 {
@@ -594,30 +593,28 @@ void NetworkModel::onNeedSecretsFinished(const QString &info0, const QString &in
 void NetworkModel::onConnectivityChanged(int connectivity)
 {
     Connectivity conn = static_cast<Connectivity>(connectivity);
+    if (m_Connectivity == conn) {
+        return;
+    }
 
-    // if the connectivity state from NetworkManager become to NotFull
-    // from Full, check it again use our urls
-    if (m_Connectivity == Full && conn != Full) {
-        m_Connectivity = NoConnectivity;
+    m_Connectivity = conn;
+
+    // if the new connectivity state from NetworkManager is not Full,
+    // check it again use our urls
+    if (m_Connectivity != Full) {
         if (!m_connectivityCheckThread->isRunning()) {
             m_connectivityCheckThread->start();
         }
         Q_EMIT needCheckConnectivitySecondary();
-        Q_EMIT connectivityChanged(NoConnectivity);
-        return;
     }
 
-    if (m_Connectivity == NoConnectivity && conn == Full) {
-        m_Connectivity = Full;
-        m_ConnectivitySecondary = Full;
-        Q_EMIT connectivityChanged(Full);
-    }
+    Q_EMIT connectivityChanged(m_Connectivity);
 }
 
 void NetworkModel::onConnectivitySecondaryCheckFinished(bool connectivity)
 {
-    m_ConnectivitySecondary = connectivity ? Full : NoConnectivity;
-    Q_EMIT connectivityChanged(m_ConnectivitySecondary);
+    m_Connectivity = connectivity ? Full : NoConnectivity;
+    Q_EMIT connectivityChanged(m_Connectivity);
 }
 
 bool NetworkModel::containsDevice(const QString &devPath) const
