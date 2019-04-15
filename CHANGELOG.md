@@ -1,3 +1,13 @@
+<a name="0.1.4"></a>
+## 0.1.4 (2019-04-15)
+
+
+#### Bug Fixes
+
+*   connectivity allways NotFull if startup without NotFull ([d5ee0029](d5ee0029))
+
+
+
 <a name="0.1.3"></a>
 ## 0.1.3 (2019-04-10)
 
