@@ -21,49 +21,49 @@
     <message>
         <location filename="../networkdevice.cpp" line="102"/>
         <source>Obtaining Address</source>
-        <translation>Adres alınıyor</translation>
+        <translation>Adres Alınıyor</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="103"/>
         <location filename="../networkdevice.cpp" line="144"/>
         <source>Connected</source>
-        <translation>Bağlantı kuruldu</translation>
+        <translation>Bağlandı</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="105"/>
         <location filename="../networkdevice.cpp" line="146"/>
         <source>Failed</source>
-        <translation>Bağlantı kurulamadı</translation>
+        <translation>Başarısız</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="115"/>
         <source>Device disabled</source>
-        <translation>Aygıt Devre Dışı</translation>
+        <translation>Aygıt devre dışı</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="119"/>
         <source>Connected but no Internet access</source>
-        <translation>Bağlı Ancak İnternet Erişimi Yok</translation>
+        <translation>Bağlı ancak İnternet erişimi yok</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="123"/>
         <source>Failed to obtain IP address</source>
-        <translation>IP Adresi Alınamadı</translation>
+        <translation>IP adresi alınamadı</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="133"/>
         <source>Network cable unplugged</source>
-        <translation>Ağ Kablosu Takılı Değil</translation>
+        <translation>Ağ kablosu takılı değil</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="137"/>
         <source>Not connected</source>
-        <translation>Bağlı Değil</translation>
+        <translation>Bağlı değil</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="143"/>
         <source>Obtaining IP address</source>
-        <translation>IP Adresi Alınıyor</translation>
+        <translation>IP adresi alınıyor</translation>
     </message>
 </context>
 </TS>

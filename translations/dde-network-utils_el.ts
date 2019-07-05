@@ -21,7 +21,7 @@
     <message>
         <location filename="../networkdevice.cpp" line="102"/>
         <source>Obtaining Address</source>
-        <translation type="unfinished"/>
+        <translation>Απόκτηση Διεύθηνσης</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="103"/>
@@ -38,22 +38,22 @@
     <message>
         <location filename="../networkdevice.cpp" line="115"/>
         <source>Device disabled</source>
-        <translation type="unfinished"/>
+        <translation>Συσκευή Αποσυνδέθηκε</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="119"/>
         <source>Connected but no Internet access</source>
-        <translation type="unfinished"/>
+        <translation>Συνδεδεμένο αλλά χωρίς πρόσβαση στο διαδίκτυο</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="123"/>
         <source>Failed to obtain IP address</source>
-        <translation type="unfinished"/>
+        <translation>Αποτυχία απόκτησης διεύθυνσης IP </translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="133"/>
         <source>Network cable unplugged</source>
-        <translation type="unfinished"/>
+        <translation>Το καλώδιο δικτύου, αποσυνδέθηκε</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="137"/>
@@ -63,7 +63,7 @@
     <message>
         <location filename="../networkdevice.cpp" line="143"/>
         <source>Obtaining IP address</source>
-        <translation type="unfinished"/>
+        <translation>Απόκτηση Διεύθηνσης IP</translation>
     </message>
 </context>
 </TS>

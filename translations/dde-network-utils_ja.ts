@@ -27,7 +27,7 @@
         <location filename="../networkdevice.cpp" line="103"/>
         <location filename="../networkdevice.cpp" line="144"/>
         <source>Connected</source>
-        <translation>接続されました</translation>
+        <translation>接続済み</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="105"/>
