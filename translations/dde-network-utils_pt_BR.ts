@@ -21,7 +21,7 @@
     <message>
         <location filename="../networkdevice.cpp" line="102"/>
         <source>Obtaining Address</source>
-        <translation>Obtendo endereço</translation>
+        <translation>Obtendo Endereço</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="103"/>

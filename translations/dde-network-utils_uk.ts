@@ -4,13 +4,13 @@
     <message>
         <location filename="../networkdevice.cpp" line="97"/>
         <source>Disconnected</source>
-        <translation>Відключено</translation>
+        <translation>Від’єднано</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="99"/>
         <location filename="../networkdevice.cpp" line="139"/>
         <source>Connecting</source>
-        <translation>Підключення</translation>
+        <translation>З&apos;єднання</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="100"/>
@@ -27,7 +27,7 @@
         <location filename="../networkdevice.cpp" line="103"/>
         <location filename="../networkdevice.cpp" line="144"/>
         <source>Connected</source>
-        <translation>Підключено</translation>
+        <translation>З&apos;єднано</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="105"/>
@@ -58,7 +58,7 @@
     <message>
         <location filename="../networkdevice.cpp" line="137"/>
         <source>Not connected</source>
-        <translation>Не підключено</translation>
+        <translation>Не з&apos;єднано</translation>
     </message>
     <message>
         <location filename="../networkdevice.cpp" line="143"/>
