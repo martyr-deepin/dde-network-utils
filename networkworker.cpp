@@ -25,9 +25,11 @@
 
 #include "networkworker.h"
 
+#include <QMetaProperty>
+
 using namespace dde::network;
 
-NetworkWorker::NetworkWorker(NetworkModel *model, QObject *parent)
+NetworkWorker::NetworkWorker(NetworkModel *model, QObject *parent, bool sync)
     : QObject(parent),
       m_networkInter("com.deepin.daemon.Network", "/com/deepin/daemon/Network", QDBusConnection::sessionBus(), this),
       m_chainsInter(new ProxyChains("com.deepin.daemon.Network", "/com/deepin/daemon/Network/ProxyChains", QDBusConnection::sessionBus(), this)),
@@ -59,14 +61,26 @@ NetworkWorker::NetworkWorker(NetworkModel *model, QObject *parent)
     m_networkInter.setSync(false);
     m_chainsInter->setSync(false);
 
-    active();
+    active(sync);
 }
 
-void NetworkWorker::active()
+void NetworkWorker::active(bool bSync)
 {
     m_networkInter.blockSignals(false);
 
-    m_networkModel->onDevicesChanged(m_networkInter.devices());
+    //如果需要立即显示网络模块，则需要在active中使用同步方式获取网络设备数据
+    if (bSync) {
+        QDBusInterface inter("com.deepin.daemon.Network",
+                             "/com/deepin/daemon/Network",
+                             "com.deepin.daemon.Network",
+                             QDBusConnection::sessionBus());
+        QVariant req = inter.property("Devices");
+        qDebug() << "devices req :" << req;
+        m_networkModel->onDevicesChanged(req.toString());
+        qDebug() << Q_FUNC_INFO << "network active ,get devices size :" << m_networkModel->devices().size();
+    } else {
+        m_networkModel->onDevicesChanged(m_networkInter.devices());
+    }
     m_networkModel->onConnectionListChanged(m_networkInter.connections());
     m_networkModel->onVPNEnabledChanged(m_networkInter.vpnEnabled());
     m_networkModel->onActiveConnectionsChanged(m_networkInter.activeConnections());

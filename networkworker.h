@@ -45,9 +45,9 @@ class NetworkWorker : public QObject
     Q_OBJECT
 
 public:
-    explicit NetworkWorker(NetworkModel *model, QObject *parent = nullptr);
+    explicit NetworkWorker(NetworkModel *model, QObject *parent = nullptr, bool sync = false);
 
-    void active();
+    void active(bool bSync = false);
     void deactive();
 
 public Q_SLOTS:
