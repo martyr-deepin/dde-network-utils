@@ -227,6 +227,9 @@ void NetworkWorker::queryProxyIgnoreHosts()
 
 void NetworkWorker::queryActiveConnInfo()
 {
+    //需要及时更新网络连接状态
+    m_networkModel->onConnectivityChanged(m_networkInter.connectivity());
+
     QDBusPendingCallWatcher *w = new QDBusPendingCallWatcher(m_networkInter.GetActiveConnectionInfo(), this);
 
     connect(w, &QDBusPendingCallWatcher::finished, this, &NetworkWorker::queryActiveConnInfoCB);
