@@ -215,6 +215,7 @@ void NetworkModel::onProxyIgnoreHostsChanged(const QString &hosts)
 
 void NetworkModel::onDevicesChanged(const QString &devices)
 {
+    qDebug() << "onDevicesChanged: " << devices;
     const QJsonObject data = QJsonDocument::fromJson(devices.toUtf8()).object();
 
     QSet<QString> devSet;
