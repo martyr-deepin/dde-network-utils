@@ -120,7 +120,9 @@ const QString NetworkDevice::statusStringDetail() const
     }
 
     if (obtainIpFailed()) {
-        return tr("Failed to obtain IP address");
+        //return tr("Failed to obtain IP address");
+        //确认 没有获取IP显示未连接状态（DHCP服务关闭）
+        return tr("Not connected");
     }
 
     switch (m_status)
