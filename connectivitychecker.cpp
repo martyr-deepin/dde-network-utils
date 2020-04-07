@@ -27,7 +27,7 @@
 #include <QScopedPointer>
 
 static const QStringList CheckUrls {
-    "https://beta.elementary.io",
+    "https://www.baidu.com",
     "https://www.bing.com",
     "https://www.google.com",
     "https://www.amazon.com",
