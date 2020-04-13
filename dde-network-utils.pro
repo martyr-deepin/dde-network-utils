@@ -9,6 +9,8 @@ PKGCONFIG      += dframeworkdbus
 DEFINES += DDENETWORKUTILS_LIBRARY
 DEFINES += QT_DEPRECATED_WARNINGS
 
+INCLUDEPATH += /usr/include/x86_64-linux-gnu/qt5/QGSettings
+
 SOURCES += \
     $$PWD/networkmodel.cpp \
     $$PWD/networkworker.cpp \

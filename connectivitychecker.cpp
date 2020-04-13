@@ -38,13 +38,22 @@ using namespace dde::network;
 
 ConnectivityChecker::ConnectivityChecker(QObject *parent) : QObject(parent)
 {
+    m_settings = new QGSettings("com.deepin.dde.network-utils","/com/deepin/dde/network-utils/");
+    m_checkUrls = m_settings->get("network-checker-urls").toStringList();
+    connect(m_settings,&QGSettings::changed,[=](const QString key){
+        if (key == "network-checker-urls") {
+            m_checkUrls = m_settings->get("network-checker-urls").toStringList();
+        }
+    });
 }
 
 void ConnectivityChecker::startCheck()
 {
     QNetworkAccessManager nam;
-
-    for (auto url : CheckUrls) {
+    if (m_checkUrls.isEmpty()) {
+        m_checkUrls = CheckUrls;
+    }
+    for (auto url : m_checkUrls) {
         QScopedPointer<QNetworkReply> reply(nam.get(QNetworkRequest(QUrl(url))));
         qDebug() << "Check connectivity using url:" << url;
 
@@ -60,7 +69,8 @@ void ConnectivityChecker::startCheck()
 
         reply->close();
         if (reply->error() == QNetworkReply::NoError &&
-                reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 200) {
+                (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 200 ||
+                reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 204)) {
             qDebug() << "Connected to url:" << url;
             Q_EMIT checkFinished(true);
             return;
