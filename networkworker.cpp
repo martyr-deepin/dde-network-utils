@@ -237,6 +237,9 @@ void NetworkWorker::queryActiveConnInfo()
 
 void NetworkWorker::queryAccessPoints(const QString &devPath)
 {
+    //wifi需要及时更新网络连接状态
+    m_networkModel->onConnectivityChanged(m_networkInter.connectivity());
+
     QDBusPendingCallWatcher *w = new QDBusPendingCallWatcher(m_networkInter.GetAccessPoints(QDBusObjectPath(devPath)));
 
     w->setProperty("devPath", devPath);
