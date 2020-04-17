@@ -25,6 +25,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QScopedPointer>
+#include <QGSettings>
 
 static const QStringList CheckUrls {
     "https://www.baidu.com",
@@ -38,13 +39,15 @@ using namespace dde::network;
 
 ConnectivityChecker::ConnectivityChecker(QObject *parent) : QObject(parent)
 {
-    m_settings = new QGSettings("com.deepin.dde.network-utils","/com/deepin/dde/network-utils/", this);
-    m_checkUrls = m_settings->get("network-checker-urls").toStringList();
-    connect(m_settings,&QGSettings::changed, [ = ] (const QString key) {
-        if (key == "network-checker-urls") {
-            m_checkUrls = m_settings->get("network-checker-urls").toStringList();
-        }
-    });
+    if(QGSettings::isSchemaInstalled("com.deepin.dde.network-utils")) {
+        m_settings = new QGSettings("com.deepin.dde.network-utils","/com/deepin/dde/network-utils/", this);
+        m_checkUrls = m_settings->get("network-checker-urls").toStringList();
+        connect(m_settings,&QGSettings::changed, [ = ] (const QString key) {
+            if (key == "network-checker-urls") {
+                m_checkUrls = m_settings->get("network-checker-urls").toStringList();
+            }
+        });
+    }
 }
 
 void ConnectivityChecker::startCheck()
