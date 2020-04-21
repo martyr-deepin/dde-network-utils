@@ -75,7 +75,7 @@ void NetworkWorker::active(bool bSync)
                              "com.deepin.daemon.Network",
                              QDBusConnection::sessionBus());
         QVariant req = inter.property("Devices");
-        qDebug() << "devices req :" << req;
+//        qDebug() << "devices req :" << req;
         m_networkModel->onDevicesChanged(req.toString());
         qDebug() << Q_FUNC_INFO << "network active ,get devices size :" << m_networkModel->devices().size();
     } else {
