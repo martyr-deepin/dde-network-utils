@@ -33,6 +33,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
+#define TIMERINTERVAL (60 * 1000) // 一分钟
 using namespace dde::network;
 
 Connectivity NetworkModel::m_Connectivity(Connectivity::Full);
@@ -55,12 +56,23 @@ NetworkModel::NetworkModel(QObject *parent)
     , m_connectivityChecker(new ConnectivityChecker)
     , m_connectivityCheckThread(new QThread(this))
 {
+    m_checkConnectivityTimer = new QTimer(this);
+    m_checkConnectivityTimer->setInterval(TIMERINTERVAL);
+
+    connect(m_checkConnectivityTimer, &QTimer::timeout, m_connectivityChecker,
+            &ConnectivityChecker::startCheck);
     connect(this, &NetworkModel::needCheckConnectivitySecondary,
             m_connectivityChecker, &ConnectivityChecker::startCheck);
     connect(m_connectivityChecker, &ConnectivityChecker::checkFinished,
             this, &NetworkModel::onConnectivitySecondaryCheckFinished);
+    connect(m_connectivityCheckThread, &QThread::finished, m_connectivityChecker,
+            &ConnectivityChecker::deleteLater);
+    connect(m_connectivityCheckThread, &QThread::finished, m_connectivityCheckThread,
+            &QThread::deleteLater);
 
     m_connectivityChecker->moveToThread(m_connectivityCheckThread);
+    m_connectivityCheckThread->start();
+    m_checkConnectivityTimer->start();
 }
 
 NetworkModel::~NetworkModel()
@@ -607,6 +619,7 @@ void NetworkModel::onConnectivityChanged(int connectivity)
             m_connectivityCheckThread->start();
         }
         Q_EMIT needCheckConnectivitySecondary();
+        m_checkConnectivityTimer->start();
     }
 
     Q_EMIT connectivityChanged(m_Connectivity);
