@@ -35,6 +35,8 @@ static const QStringList CheckUrls {
     "https://github.com",
 };
 
+#define TIMERINTERVAL (60 * 1000) // 一分钟
+
 using namespace dde::network;
 
 ConnectivityChecker::ConnectivityChecker(QObject *parent) : QObject(parent)
@@ -48,6 +50,14 @@ ConnectivityChecker::ConnectivityChecker(QObject *parent) : QObject(parent)
             }
         });
     }
+
+   m_checkConnectivityTimer =  new QTimer(this);
+   m_checkConnectivityTimer->setInterval(TIMERINTERVAL);
+
+   connect(m_checkConnectivityTimer, &QTimer::timeout, this,
+               &ConnectivityChecker::startCheck);
+
+      m_checkConnectivityTimer->start();
 }
 
 void ConnectivityChecker::startCheck()

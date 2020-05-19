@@ -159,7 +159,6 @@ private:
     NetworkDevice *m_lastSecretDevice;
     ConnectivityChecker *m_connectivityChecker;
     QThread *m_connectivityCheckThread;
-    QTimer *m_checkConnectivityTimer;
 
     bool m_vpnEnabled;
     bool m_appProxyExist;

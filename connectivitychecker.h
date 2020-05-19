@@ -24,6 +24,7 @@
 
 #include <QObject>
 #include <QStringList>
+#include <QTimer>
 
 class QGSettings;
 
@@ -47,6 +48,7 @@ public Q_SLOTS:
 private:
     QGSettings* m_settings;
     QStringList m_checkUrls;
+    QTimer *m_checkConnectivityTimer;
 };
 
 }   // namespace network
