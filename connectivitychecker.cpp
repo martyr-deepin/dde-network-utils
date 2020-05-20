@@ -36,6 +36,7 @@ static const QStringList CheckUrls {
 };
 
 #define TIMERINTERVAL (60 * 1000) // 一分钟
+#define TIMEOUT (30 * 1000) // 30s超时
 
 using namespace dde::network;
 
@@ -76,17 +77,26 @@ void ConnectivityChecker::startCheck()
 //        reply->waitForReadyRead(-1);
 
         // Blocking, about 30 second to timeout
+        QTimer timer;
+        timer.setSingleShot(true);
         QEventLoop synchronous;
+        connect(&timer, &QTimer::timeout, &synchronous, &QEventLoop::quit);
         connect(&nam, &QNetworkAccessManager::finished, &synchronous, &QEventLoop::quit);
+        timer.start(TIMEOUT);
         synchronous.exec();
 
         reply->close();
-        if (reply->error() == QNetworkReply::NoError &&
-                (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 200 ||
-                reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 204)) {
-            qDebug() << "Connected to url:" << url;
-            Q_EMIT checkFinished(true);
-            return;
+        if (timer.isActive()) {
+            timer.stop();
+            if (reply->error() == QNetworkReply::NoError &&
+                    (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 200 ||
+                    reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 204)) {
+                qDebug() << "Connected to url:" << url;
+                Q_EMIT checkFinished(true);
+                return;
+            }
+        } else {
+            qDebug() << "Timeout";
         }
 
         qDebug() << "Failed to connect url:" << url;
