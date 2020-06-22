@@ -51,7 +51,7 @@ public:
 
     enum DeviceStatus
     {
-        Unknow          = 0,
+        Unknown         = 0,
         Unmanaged       = 10,
         Unavailable     = 20,
         Disconnected    = 30,
