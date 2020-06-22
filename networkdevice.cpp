@@ -39,7 +39,7 @@ NetworkDevice::NetworkDevice(const DeviceType type, const QJsonObject &info, QOb
     : QObject(parent),
 
       m_type(type),
-      m_status(Unknow),
+      m_status(Unknown),
       m_deviceInfo(info),
       m_enabled(true)
 {
@@ -48,7 +48,7 @@ NetworkDevice::NetworkDevice(const DeviceType type, const QJsonObject &info, QOb
 
 void NetworkDevice::setDeviceStatus(const int status)
 {
-    DeviceStatus stat = Unknow;
+    DeviceStatus stat = Unknown;
 
     switch (status)
     {
@@ -125,7 +125,7 @@ const QString NetworkDevice::statusStringDetail() const
 
     switch (m_status)
     {
-    case Unknow:
+    case Unknown:
     case Unmanaged:
     case Unavailable: {
         switch (m_type) {
