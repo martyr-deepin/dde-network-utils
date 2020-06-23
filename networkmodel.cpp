@@ -35,6 +35,8 @@
 
 using namespace dde::network;
 
+#define CONNECTED  2
+
 Connectivity NetworkModel::m_Connectivity(Connectivity::Full);
 
 NetworkDevice::DeviceType parseDeviceType(const QString &type)
@@ -422,6 +424,7 @@ void NetworkModel::onActiveConnectionsChanged(const QString &conns)
             continue;
 
         m_activeConns << info;
+        int connectionState = info.value("State").toInt();
 
         for (const auto &item : info.value("Devices").toArray()) {
             const QString &devicePath = item.toString();
@@ -429,6 +432,12 @@ void NetworkModel::onActiveConnectionsChanged(const QString &conns)
                 continue;
             }
             deviceActiveConnsMap[devicePath] << info;
+
+            NetworkDevice *dev = device(devicePath);
+            if (dev != nullptr) {
+                if (dev->status() != NetworkDevice::Activated && connectionState == CONNECTED)
+                    dev->setDeviceStatus(NetworkDevice::Activated);
+            }
         }
     }
 
