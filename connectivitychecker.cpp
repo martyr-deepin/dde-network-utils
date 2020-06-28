@@ -45,7 +45,7 @@ void ConnectivityChecker::startCheck()
     QNetworkAccessManager nam;
 
     for (auto url : CheckUrls) {
-        QScopedPointer<QNetworkReply> reply(nam.get(QNetworkRequest(QUrl(url))));
+        QScopedPointer<QNetworkReply> reply(nam.head(QNetworkRequest(QUrl(url))));
         qDebug() << "Check connectivity using url:" << url;
 
         // Do not use waitForReadyRead to block thread,
