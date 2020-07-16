@@ -234,7 +234,6 @@ void NetworkModel::onDevicesChanged(const QString &devices)
         {
             const auto info = l.toObject();
             const QString path = info.value("Path").toString();
-            const uint value = info.value("InterfaceFlags").toInt();
 
             if (!devSet.contains(path)) {
                 devSet << path;
@@ -248,11 +247,7 @@ void NetworkModel::onDevicesChanged(const QString &devices)
                 switch (type)
                 {
                 case NetworkDevice::Wireless:   d = new WirelessDevice(info, this);      break;
-                case NetworkDevice::Wired:
-                    if (value & NM_DEVICE_INTERFACE_FLAG_UP) {
-                        d = new WiredDevice(info, this);
-                    }
-                 break;
+                case NetworkDevice::Wired:      d = new WiredDevice(info, this);         break;
                 default:;
                 }
                 m_devices.append(d);
