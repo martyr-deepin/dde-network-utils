@@ -31,19 +31,29 @@ static const QStringList CheckUrls {
     "https://www.uniontech.com",
 };
 
+#define TIMERINTERVAL (60 * 1000) // 一分钟
+#define TIMEOUT (30 * 1000) // 30s超时
+
 using namespace dde::network;
 
 ConnectivityChecker::ConnectivityChecker(QObject *parent) : QObject(parent)
 {
     if (QGSettings::isSchemaInstalled("com.deepin.dde.network-utils")) {
-            m_settings = new QGSettings("com.deepin.dde.network-utils", "/com/deepin/dde/network-utils/", this);
-            m_checkUrls = m_settings->get("network-checker-urls").toStringList();
-            connect(m_settings, &QGSettings::changed, [ = ] (const QString key) {
-                if (key == "network-checker-urls") {
-                    m_checkUrls = m_settings->get("network-checker-urls").toStringList();
-                }
-            });
+        m_settings = new QGSettings("com.deepin.dde.network-utils", "/com/deepin/dde/network-utils/", this);
+        m_checkUrls = m_settings->get("network-checker-urls").toStringList();
+        connect(m_settings, &QGSettings::changed, [ = ] (const QString key) {
+            if (key == "network-checker-urls") {
+                m_checkUrls = m_settings->get("network-checker-urls").toStringList();
+            }
+        });
     }
+    m_checkConnectivityTimer =  new QTimer(this);
+    m_checkConnectivityTimer->setInterval(TIMERINTERVAL);
+
+    connect(m_checkConnectivityTimer, &QTimer::timeout, this,
+               &ConnectivityChecker::startCheck);
+
+    m_checkConnectivityTimer->start();
 }
 
 void ConnectivityChecker::startCheck()
@@ -62,21 +72,28 @@ void ConnectivityChecker::startCheck()
 //        reply->waitForReadyRead(-1);
 
         // Blocking, about 30 second to timeout
+        QTimer timer;
+        timer.setSingleShot(true);
         QEventLoop synchronous;
+        connect(&timer, &QTimer::timeout, &synchronous, &QEventLoop::quit);
         connect(&nam, &QNetworkAccessManager::finished, &synchronous, &QEventLoop::quit);
+        timer.start(TIMEOUT);
         synchronous.exec();
 
         reply->close();
         //网络状态码中, 大于等于200, 小于等于206的都是网络正常
-        if (reply->error() == QNetworkReply::NoError &&
-                (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() >= 200 &&
-                reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() <= 206)) {
-            qDebug() << "Connected to url:" << url;
-            Q_EMIT checkFinished(true);
-            return;
+        if (timer.isActive()) {
+            timer.stop();
+            if (reply->error() == QNetworkReply::NoError &&
+                    (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() >= 200 &&
+                    reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() <= 206)) {
+                qDebug() << "Connected to url:" << url;
+                Q_EMIT checkFinished(true);
+                return;
+            }
+        } else {
+            qDebug() << "Timeout";
         }
-
-        qDebug() << "Failed to connect url:" << url;
     }
 
     Q_EMIT checkFinished(false);
