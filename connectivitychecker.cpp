@@ -26,25 +26,33 @@
 #include <QNetworkReply>
 #include <QScopedPointer>
 
+//当没有进行配置的时候, 则访问我们官网
 static const QStringList CheckUrls {
-    "https://www.baidu.com",
-    "https://www.bing.com",
-    "https://www.google.com",
-    "https://www.amazon.com",
-    "https://github.com",
+    "https://www.uniontech.com",
 };
 
 using namespace dde::network;
 
 ConnectivityChecker::ConnectivityChecker(QObject *parent) : QObject(parent)
 {
+    if (QGSettings::isSchemaInstalled("com.deepin.dde.network-utils")) {
+            m_settings = new QGSettings("com.deepin.dde.network-utils", "/com/deepin/dde/network-utils/", this);
+            m_checkUrls = m_settings->get("network-checker-urls").toStringList();
+            connect(m_settings, &QGSettings::changed, [ = ] (const QString key) {
+                if (key == "network-checker-urls") {
+                    m_checkUrls = m_settings->get("network-checker-urls").toStringList();
+                }
+            });
+    }
 }
 
 void ConnectivityChecker::startCheck()
 {
     QNetworkAccessManager nam;
-
-    for (auto url : CheckUrls) {
+    if (m_checkUrls.isEmpty()) {
+        m_checkUrls = CheckUrls;
+    }
+    for (auto url : m_checkUrls) {
         QScopedPointer<QNetworkReply> reply(nam.head(QNetworkRequest(QUrl(url))));
         qDebug() << "Check connectivity using url:" << url;
 
@@ -59,8 +67,10 @@ void ConnectivityChecker::startCheck()
         synchronous.exec();
 
         reply->close();
+        //网络状态码中, 大于等于200, 小于等于206的都是网络正常
         if (reply->error() == QNetworkReply::NoError &&
-                reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 200) {
+                (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() >= 200 &&
+                reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() <= 206)) {
             qDebug() << "Connected to url:" << url;
             Q_EMIT checkFinished(true);
             return;
