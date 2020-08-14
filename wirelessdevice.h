@@ -31,6 +31,10 @@
 #include <QMap>
 #include <QJsonArray>
 
+#include <com_deepin_daemon_network.h>
+
+using NetworkInter = com::deepin::daemon::Network;
+
 namespace dde {
 
 namespace network {
@@ -63,7 +67,9 @@ public:
     inline const QString activeApSsid() const { return m_activeApInfo.value("Ssid").toString(); }
     inline const QString activeApPath() const { return m_activeApInfo.value("Path").toString(); }
     inline int activeApStrength() const { return m_activeApInfo.value("Strength").toInt(); }
-
+    void updateWirlessAp();
+    void WirelessUpdate(const QJsonValue &WirelessData); //该接口给networkmodel使用
+    
 Q_SIGNALS:
     void apAdded(const QJsonObject &apInfo) const;
     void apInfoChanged(const QJsonObject &apInfo) const;
@@ -101,6 +107,9 @@ private:
     QMap<QString, QJsonObject> m_apsMap;
     QList<QJsonObject> m_connections;
     QList<QJsonObject> m_hotspotConnections;
+    QMap<QString,QString> m_ssidDatas;
+
+    NetworkInter m_networkInter;
 };
 
 }

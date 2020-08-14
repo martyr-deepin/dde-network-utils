@@ -434,8 +434,10 @@ void NetworkModel::onActiveConnectionsChanged(const QString &conns)
 
             NetworkDevice *dev = device(devicePath);
             if (dev != nullptr) {
-                if (dev->status() != NetworkDevice::Activated && connectionState == CONNECTED)
-                    dev->setDeviceStatus(NetworkDevice::Activated);
+                if (dev->status() != NetworkDevice::DeviceStatus::Activated && connectionState == CONNECTED) {
+                    qDebug() << devicePath << "The active connection status does not match the device connection status. It has been changed";
+                    dev->setDeviceStatus(NetworkDevice::DeviceStatus::Activated);
+                }
             }
         }
     }
@@ -649,4 +651,17 @@ void NetworkModel::onAppProxyExistChanged(bool appProxyExist)
     m_appProxyExist = appProxyExist;
 
     Q_EMIT appProxyExistChanged(appProxyExist);
+}
+
+void NetworkModel::WirelessAccessPointsChanged(const QString &WirelessList)
+{
+    //当数据非json的时候,则这个里面的项为0,则下面的for不会被执行
+    QJsonObject WirelessData = QJsonDocument::fromJson(WirelessList.toUtf8()).object();
+    for (QString Device : WirelessData.keys()) {
+        for (auto const dev : m_devices) {
+            //当类型不为无线网,path不为当前需要的device则进入下一个循环
+            if (dev->type() != NetworkDevice::Wireless || dev->path() != Device) continue;
+            return dynamic_cast<WirelessDevice *>(dev)->WirelessUpdate(WirelessData.value(Device));
+        }
+    }
 }

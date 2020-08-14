@@ -32,9 +32,14 @@ using namespace dde::network;
 #include <QJsonArray>
 #include <QJsonValue>
 #include <QJsonDocument>
+#include <QTimer>
+
+#define WIRELESS_PATH  "Path"
+#define WIRELESS_STRENGTH  "Strength"
 
 WirelessDevice::WirelessDevice(const QJsonObject &info, QObject *parent)
     : NetworkDevice(NetworkDevice::Wireless, info, parent)
+    , m_networkInter("com.deepin.daemon.Network", "/com/deepin/daemon/Network", QDBusConnection::sessionBus(), this)
 {
 }
 
@@ -106,10 +111,15 @@ const QString WirelessDevice::activeWirelessConnSettingPath() const
 const QJsonArray WirelessDevice::apList() const
 {
     QJsonArray apArray;
-    for (auto ap : m_apsMap.values()) {
-        apArray.append(ap);
+    for (auto ap : m_ssidDatas.values()) {
+        apArray.append(QJsonDocument::fromJson(ap.toUtf8()).object());
     }
     return apArray;
+}
+
+void WirelessDevice::updateWirlessAp()
+{
+    m_networkInter.RequestWirelessScan();
 }
 
 void WirelessDevice::setAPList(const QString &apList)
@@ -120,11 +130,11 @@ void WirelessDevice::setAPList(const QString &apList)
     const QJsonArray &apArray = QJsonDocument::fromJson(apList.toUtf8()).array();
     for (auto item : apArray) {
         const QJsonObject &ap = item.toObject();
-        const QString &path = ap.value("Path").toString();
+        const QString &path = ap.value(WIRELESS_PATH).toString();
 
         if (!path.isEmpty()) {
             if (ap.value("Ssid").toString() == activeApSsid() &&
-                    ap.value("Strength").toInt() > activeApStrength()) {
+                    ap.value(WIRELESS_STRENGTH).toInt() > activeApStrength()) {
                 m_activeApInfo = ap;
                 Q_EMIT activeApInfoChanged(m_activeApInfo);
             }
@@ -152,11 +162,11 @@ void WirelessDevice::setAPList(const QString &apList)
 void WirelessDevice::updateAPInfo(const QString &apInfo)
 {
     const auto &ap = QJsonDocument::fromJson(apInfo.toUtf8()).object();
-    const auto &path = ap.value("Path").toString();
+    const auto &path = ap.value(WIRELESS_PATH).toString();
 
     if (!path.isEmpty()) {
         if (ap.value("Ssid").toString() == activeApSsid() &&
-                ap.value("Strength").toInt() > activeApStrength()) {
+                ap.value(WIRELESS_STRENGTH).toInt() > activeApStrength()) {
             m_activeApInfo = ap;
             Q_EMIT activeApInfoChanged(m_activeApInfo);
         }
@@ -174,7 +184,7 @@ void WirelessDevice::updateAPInfo(const QString &apInfo)
 void WirelessDevice::deleteAP(const QString &apInfo)
 {
     const auto &ap = QJsonDocument::fromJson(apInfo.toUtf8()).object();
-    const auto &path = ap.value("Path").toString();
+    const auto &path = ap.value(WIRELESS_PATH).toString();
 
     if (!path.isEmpty()) {
         if (m_apsMap.contains(path)) {
@@ -265,4 +275,38 @@ QString WirelessDevice::activeApSsidByActiveConnUuid(const QString &activeConnUu
     }
 
     return activeApSsid;
+}
+
+void WirelessDevice::WirelessUpdate(const QJsonValue &WirelessList)
+{
+    //临时变量保存当前全部无限网络状态使用
+    QMap<QString, QJsonObject> PathDatas;
+    QJsonArray WirelessDatas = WirelessList.toArray();
+    for (QJsonValue data : WirelessDatas) {
+        //数据为空则进行下一个循环
+        if (data.isNull()) continue;
+        //数据转换
+        QJsonObject apInfo = data.toObject();
+        //当不存在两个Key的时候,则进行下一个循环
+        if (!apInfo.contains(WIRELESS_PATH) && !apInfo.contains(WIRELESS_STRENGTH)) continue;
+
+        QString Path = apInfo.value(WIRELESS_PATH).toString();
+        //修改了的会直接更新,没有的会直接插入
+        PathDatas.insert(Path,apInfo);  
+    }
+
+    //由于改变和增加,都是调用updateAPInfo，所以可以直接将改变了的全部直接发送出去
+    for (QString Pathkey : PathDatas.keys()) {
+        QString apInfo = QString(QJsonDocument(PathDatas.value(Pathkey)).toJson());
+        //这一步会根据当前有的做修改，没有的会加上,如果有的则会更新
+        m_ssidDatas.insert(Pathkey, apInfo);
+        this->updateAPInfo(apInfo);
+    }
+    for (QString PathKey : m_ssidDatas.keys()) {
+        if (!PathDatas.contains(PathKey)) {
+            this->deleteAP(m_ssidDatas.value(PathKey));
+            m_ssidDatas.remove(PathKey);
+        }
+    }
+    PathDatas.clear();
 }

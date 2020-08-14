@@ -149,7 +149,12 @@ private Q_SLOTS:
     void onNeedSecretsFinished(const QString &info0, const QString &info1);
     void onConnectivityChanged(int connectivity);
     void onConnectivitySecondaryCheckFinished(bool connectivity);
-
+    /**
+     * @def WirelessAccessPointsChanged
+     * @brief 后端数据入口处,属性的修改会调用该函数
+     * @param WirelessList
+     */
+    void WirelessAccessPointsChanged(const QString &WirelessList);
 private:
     bool containsDevice(const QString &devPath) const;
     NetworkDevice *device(const QString &devPath) const;

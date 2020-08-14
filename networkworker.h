@@ -59,7 +59,7 @@ public Q_SLOTS:
     void deactiveConnection(const QString &uuid);
     void disconnectDevice(const QString &devPath);
     void initWirelessHotspot(const QString &devPath);
-    void requestWirelessScan();
+    const QString requestWirelessScan();
     void queryChains();
     void queryAutoProxy();
     void queryProxyData();
