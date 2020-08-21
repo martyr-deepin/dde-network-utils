@@ -179,9 +179,9 @@ void NetworkWorker::queryProxy(const QString &type)
     connect(w, &QDBusPendingCallWatcher::finished, this, &NetworkWorker::queryProxyCB);
 }
 
-const QString NetworkWorker::requestWirelessScan()
+void NetworkWorker::requestWirelessScan()
 {
-    return m_networkInter.RequestWirelessScan();
+    m_networkInter.RequestWirelessScan();
 }
 
 void NetworkWorker::queryChains()
