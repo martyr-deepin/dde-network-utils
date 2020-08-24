@@ -25,6 +25,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QScopedPointer>
+#include <QGSettings>
 
 //当没有进行配置的时候, 则访问我们官网
 static const QStringList CheckUrls {

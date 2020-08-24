@@ -23,9 +23,10 @@
 #define CONNECTIVITYCHECKER_H
 
 #include <QObject>
-#include <QGSettings>
 #include <QStringList>
 #include <QTimer>
+
+class QGSettings;
 
 namespace dde {
 
