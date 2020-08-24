@@ -1,17 +1,11 @@
-QT       -= gui
-QT       += dbus network
+QT -= gui
+QT += dbus network
 
 TARGET = dde-network-utils
 TEMPLATE = lib
-CONFIG += link_pkgconfig c++11 create_pc create_prl no_install_prl no_keywords
-PKGCONFIG      += dframeworkdbus
-CONFIG += link_pkgconfig
-PKGCONFIG += gsettings-qt
-
-DEFINES += DDENETWORKUTILS_LIBRARY
-DEFINES += QT_DEPRECATED_WARNINGS
-
-INCLUDEPATH += /usr/include/x86_64-linux-gnu/qt5/QGSettings
+CONFIG += link_pkgconfig c++11 create_pc create_prl no_install_prl no_keywords link_pkgconfig
+PKGCONFIG += dframeworkdbus gsettings-qt
+DEFINES += DDENETWORKUTILS_LIBRARY QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     $$PWD/networkmodel.cpp \
