@@ -68,6 +68,9 @@ NetworkModel::NetworkModel(QObject *parent)
 NetworkModel::~NetworkModel()
 {
     qDeleteAll(m_devices);
+    qDebug() << "quit thread";
+    m_connectivityCheckThread->quit();
+    m_connectivityCheckThread->wait();
 }
 
 const QString NetworkModel::connectionUuidByPath(const QString &connPath) const
