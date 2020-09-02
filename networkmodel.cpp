@@ -238,25 +238,36 @@ void NetworkModel::onDevicesChanged(const QString &devices)
             const auto info = l.toObject();
             const QString path = info.value("Path").toString();
 
+            // 根据标志位InterfaceFlags判断网络连接是否有效
+            if (!info.value("InterfaceFlags").isUndefined()) {
+                int flag = info.value("InterfaceFlags").toInt();
+                if (!(flag & NM_DEVICE_INTERFACE_FLAG_UP)) {
+                    continue;
+                }
+            }
+
             if (!devSet.contains(path)) {
                 devSet << path;
             }
 
             NetworkDevice *d = device(path);
-            if (!d)
+            if (d == nullptr)
             {
                 changed = true;
 
                 switch (type)
                 {
-                case NetworkDevice::Wireless:   d = new WirelessDevice(info, this);      break;
-                case NetworkDevice::Wired:      d = new WiredDevice(info, this);         break;
-                default:;
+                    case NetworkDevice::Wireless: d = new WirelessDevice(info, this); break;
+                    case NetworkDevice::Wired:    d = new WiredDevice(info, this);    break;
+                    default:;
                 }
+
                 m_devices.append(d);
 
-                // init device enabled status
-                Q_EMIT requestDeviceStatus(d->path());
+                if (d != nullptr) {
+                    // init device enabled status
+                    Q_EMIT requestDeviceStatus(d->path());
+                }
             } else {
                 d->updateDeviceInfo(info);
             }
