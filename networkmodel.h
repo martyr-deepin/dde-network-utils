@@ -137,17 +137,12 @@ private Q_SLOTS:
     void onActiveConnectionsChanged(const QString &conns);
     void onConnectionSessionCreated(const QString &device, const QString &sessionPath);
     void onDeviceAPListChanged(const QString &device, const QString &apList);
-    void onDeviceAPInfoChanged(const QString &device, const QString &apInfo);
-    void onDeviceAPRemoved(const QString &device, const QString &apInfo);
     void onDeviceEnableChanged(const QString &device, const bool enabled);
     void onChainsTypeChanged(const QString &type);
     void onChainsAddrChanged(const QString &addr);
     void onChainsPortChanged(const uint port);
     void onChainsUserChanged(const QString &user);
     void onChainsPasswdChanged(const QString &passwd);
-    void onNeedSecrets(const QString &info);
-    void onNeedSecretsFinished(const QString &info0, const QString &info1);
-    void onConnectivityChanged(int connectivity);
     void onConnectivitySecondaryCheckFinished(bool connectivity);
     /**
      * @def WirelessAccessPointsChanged

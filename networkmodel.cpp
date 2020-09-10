@@ -297,8 +297,8 @@ void NetworkModel::onConnectionListChanged(const QString &conns)
     // 其子 map 的结构也与 m_connection 相同
     // 这表示 deviceConnections 中的一个键值对代表了一个设备, 及其独有的各种类型的连接
 
-    QMap<QString, QList<QJsonObject>> commonConnections;
-    QMap<QString, QMap<QString, QList<QJsonObject>>> deviceConnections;
+    QMap< QString, QList< QJsonObject>> commonConnections;
+    QMap< QString, QMap< QString, QList< QJsonObject>>> deviceConnections;
 
     // 解析所有的 connection
     const QJsonObject connsObject = QJsonDocument::fromJson(conns.toUtf8()).object();
@@ -490,27 +490,6 @@ void NetworkModel::onDeviceAPListChanged(const QString &device, const QString &a
     }
 }
 
-void NetworkModel::onDeviceAPInfoChanged(const QString &device, const QString &apInfo)
-{
-    for (auto const dev : m_devices)
-    {
-        if (dev->type() != NetworkDevice::Wireless || dev->path() != device)
-            continue;
-        return static_cast<WirelessDevice *>(dev)->updateAPInfo(apInfo);
-    }
-}
-
-void NetworkModel::onDeviceAPRemoved(const QString &device, const QString &apInfo)
-{
-    for (auto const dev : m_devices)
-    {
-        if (dev->type() != NetworkDevice::Wireless || dev->path() != device)
-            continue;
-        return static_cast<WirelessDevice *>(dev)->deleteAP(apInfo);
-    }
-}
-
-
 void NetworkModel::onDeviceEnableChanged(const QString &device, const bool enabled)
 {
     NetworkDevice *dev = nullptr;
@@ -569,57 +548,6 @@ void NetworkModel::onChainsPasswdChanged(const QString &passwd)
         m_chainsProxy.password = passwd;
         Q_EMIT chainsPasswdChanged(passwd);
     }
-}
-void NetworkModel::onNeedSecrets(const QString &info)
-{
-    /*
-     * TODO: there is a bug in daemon about var 'info', the value of key "DevicePath" is wrong.
-     * here should be EMIT the needSecrets signal of specific device after the bug above fixed
-    */
-
-    //const QJsonObject &infoObject = QJsonDocument::fromJson(info.toUtf8()).object();
-    //m_lastSecretDevice = device(infoObject.value("DevicePath").toString());
-
-    /* TODO: check this signal(NeedSecrets) of daemon is only for wireless device */
-    //if (m_lastSecretDevice != nullptr && m_lastSecretDevice->type() == NetworkDevice::Wireless) {
-        //Q_EMIT static_cast<WirelessDevice *>(m_lastSecretDevice)->needSecrets(info);
-    //} else {
-        //m_lastSecretDevice = nullptr;
-    //}
-
-    Q_EMIT needSecrets(info);
-}
-
-void NetworkModel::onNeedSecretsFinished(const QString &info0, const QString &info1)
-{
-    /* TODO: same as above */
-
-    //if (m_lastSecretDevice != nullptr) {
-        //Q_EMIT static_cast<WirelessDevice *>(m_lastSecretDevice)->needSecretsFinished(info0, info1);
-    //}
-
-    Q_EMIT needSecretsFinished(info0, info1);
-}
-
-void NetworkModel::onConnectivityChanged(int connectivity)
-{
-    Connectivity conn = static_cast<Connectivity>(connectivity);
-    if (m_Connectivity == conn) {
-        return;
-    }
-
-    m_Connectivity = conn;
-
-    // if the new connectivity state from NetworkManager is not Full,
-    // check it again use our urls
-    if (m_Connectivity != Full) {
-        if (!m_connectivityCheckThread->isRunning()) {
-            m_connectivityCheckThread->start();
-        }
-        Q_EMIT needCheckConnectivitySecondary();
-    }
-
-    Q_EMIT connectivityChanged(m_Connectivity);
 }
 
 void NetworkModel::onConnectivitySecondaryCheckFinished(bool connectivity)
