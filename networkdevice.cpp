@@ -102,7 +102,9 @@ const QString NetworkDevice::statusString() const
     case IpCheck:       return tr("Obtaining Address");
     case Activated:     return tr("Connected");
     case Deactivation:
-    case Failed:        return tr("Failed");
+        return tr("Disconnected");
+    case Failed:
+        return tr("Failed");
     default:;
     }
 
@@ -144,7 +146,9 @@ const QString NetworkDevice::statusStringDetail() const
     case Secondaries:   return tr("Obtaining IP address");
     case Activated:     return tr("Connected");
     case Deactivation:
-    case Failed:        return tr("Failed");
+        return tr("Disconnected");
+    case Failed:
+        return tr("Failed");
     default:;
     }
 
