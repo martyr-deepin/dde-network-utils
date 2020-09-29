@@ -33,7 +33,7 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 Header files and libraries for %{name}.
 
 %prep
-%autosetup -n %{repo}-%{version}
+%autosetup -p1 -n %{repo}-%{version}
 sed -i 's|/lib$|/%{_lib}|' dde-network-utils.pro
 
 %build
