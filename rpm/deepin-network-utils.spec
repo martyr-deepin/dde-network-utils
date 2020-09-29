@@ -1,14 +1,19 @@
-Name:           dde-network-utils
-Version:        5.0.4
-Release:        1
+%global repo dde-network-utils
+
+Name:           deepin-network-utils
+Version:        5.3.0.5
+Release:        1%{?dist}
 Summary:        Deepin desktop-environment - network utils
 License:        GPLv3
 URL:            https://github.com/linuxdeepin/dde-network-utils
-Source0:        %{name}_%{version}.orig.tar.xz	
+%if 0%{?fedora}
+Source0:        %{url}/archive/%{version}/%{repo}-%{version}.tar.gz
+%else
+Source0:        %{name}_%{version}.orig.tar.xz
+%endif
 
 BuildRequires:  gcc-c++
-#BuildRequires:  pkgconfig(dframeworkdbus) >= 2.0
-BuildRequires:  dde-qt-dbus-factory-devel
+BuildRequires:  pkgconfig(dframeworkdbus)
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  qt5-linguist
 BuildRequires:  pkgconfig(gsettings-qt)
@@ -24,11 +29,12 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 Header files and libraries for %{name}.
 
 %prep
-%setup -q -n %{name}-%{version}
-sed -i 's|lrelease|lrelease-qt5|' translate_generation.sh
+%autosetup -n %{repo}-%{version}
 sed -i 's|/lib$|/%{_lib}|' dde-network-utils.pro
 
 %build
+# help find (and prefer) qt5 utilities, e.g. qmake, lrelease
+export PATH=%{_qt5_bindir}:$PATH
 %qmake_qt5 PREFIX=%{_prefix}
 %make_build
 
@@ -39,7 +45,7 @@ sed -i 's|/lib$|/%{_lib}|' dde-network-utils.pro
 %doc README.md
 %{_libdir}/lib*.so.1
 %{_libdir}/lib*.so.1.*
-%{_datadir}/%{name}/
+%{_datadir}/%{repo}/
 
 %files devel
 %{_includedir}/libddenetworkutils/
