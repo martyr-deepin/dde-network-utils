@@ -239,10 +239,12 @@ void NetworkModel::onDevicesChanged(const QString &devices)
             const QString path = info.value("Path").toString();
 
             // 根据标志位InterfaceFlags判断网络连接是否有效
-            if (!info.value("InterfaceFlags").isUndefined()) {
-                int flag = info.value("InterfaceFlags").toInt();
-                if (!(flag & NM_DEVICE_INTERFACE_FLAG_UP)) {
-                    continue;
+            if (type != NetworkDevice::Wireless) {
+                if (!info.value("InterfaceFlags").isUndefined()) {
+                    int flag = info.value("InterfaceFlags").toInt();
+                    if (!(flag & NM_DEVICE_INTERFACE_FLAG_UP)) {
+                        continue;
+                    }
                 }
             }
 
