@@ -143,6 +143,7 @@ void WirelessDevice::setAPList(const QString &apList)
                 Q_EMIT apAdded(ap);
             } else {
                 if (apsMapOld.value(path) != ap) {
+                    m_activeApInfo = ap;
                     Q_EMIT apInfoChanged(ap);
                 }
             }
@@ -172,6 +173,7 @@ void WirelessDevice::updateAPInfo(const QString &apInfo)
         }
 
         if (m_apsMap.contains(path)) {
+            m_activeApInfo = ap;
             Q_EMIT apInfoChanged(ap);
         } else {
             Q_EMIT apAdded(ap);
@@ -242,6 +244,7 @@ void WirelessDevice::setActiveApBySsid(const QString &ssid)
             for (const auto &ap : sameSsidAps) {
                 if (activeApStrength() < ap.value("Strength").toInt()) {
                     m_activeApInfo = ap;
+                    Q_EMIT apInfoChanged(m_activeApInfo);
                 }
             }
             Q_EMIT activeApInfoChanged(m_activeApInfo);
@@ -302,6 +305,8 @@ void WirelessDevice::WirelessUpdate(const QJsonValue &WirelessList)
         m_ssidDatas.insert(Pathkey, apInfo);
         this->updateAPInfo(apInfo);
     }
+    //获取相同id中信号最大值
+    setActiveApBySsid(activeApSsidByActiveConnUuid(activeWirelessConnUuid()));
     for (QString PathKey : m_ssidDatas.keys()) {
         if (!PathDatas.contains(PathKey)) {
             this->deleteAP(m_ssidDatas.value(PathKey));
