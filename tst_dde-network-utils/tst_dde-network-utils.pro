@@ -9,7 +9,7 @@ CONFIG += testcase no_testcase_installs
 QMAKE_CXXFLAGS += -g -Wall -fprofile-arcs -ftest-coverage -O0
 QMAKE_LFLAGS += -g -Wall -fprofile-arcs -ftest-coverage  -O0
 
-PKGCONFIG += gio-qt dframeworkdbus gsettings-qt
+PKGCONFIG += dframeworkdbus gsettings-qt
 CONFIG += c++11 link_pkgconfig
 CONFIG -= app_bundle
 
