@@ -134,7 +134,7 @@ void WirelessDevice::setAPList(const QString &apList)
 
         if (!path.isEmpty()) {
             if (ap.value("Ssid").toString() == activeApSsid() &&
-                    ap.value(WIRELESS_STRENGTH).toInt() > activeApStrength()) {
+                    ap.value(WIRELESS_STRENGTH).toInt() != activeApStrength()) {
                 m_activeApInfo = ap;
                 Q_EMIT activeApInfoChanged(m_activeApInfo);
             }
@@ -143,7 +143,6 @@ void WirelessDevice::setAPList(const QString &apList)
                 Q_EMIT apAdded(ap);
             } else {
                 if (apsMapOld.value(path) != ap) {
-                    m_activeApInfo = ap;
                     Q_EMIT apInfoChanged(ap);
                 }
             }
@@ -167,13 +166,12 @@ void WirelessDevice::updateAPInfo(const QString &apInfo)
 
     if (!path.isEmpty()) {
         if (ap.value("Ssid").toString() == activeApSsid() &&
-                ap.value(WIRELESS_STRENGTH).toInt() > activeApStrength()) {
+                ap.value(WIRELESS_STRENGTH).toInt() != activeApStrength()) {
             m_activeApInfo = ap;
             Q_EMIT activeApInfoChanged(m_activeApInfo);
         }
 
         if (m_apsMap.contains(path)) {
-            m_activeApInfo = ap;
             Q_EMIT apInfoChanged(ap);
         } else {
             Q_EMIT apAdded(ap);
