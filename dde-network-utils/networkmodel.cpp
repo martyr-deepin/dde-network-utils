@@ -496,16 +496,6 @@ void NetworkModel::onConnectionSessionCreated(const QString &device, const QStri
     Q_EMIT unhandledConnectionSessionCreated(device, sessionPath);
 }
 
-void NetworkModel::onDeviceAPListChanged(const QString &device, const QString &apList)
-{
-    for (auto const dev : m_devices)
-    {
-        if (dev->type() != NetworkDevice::Wireless || dev->path() != device)
-            continue;
-        return static_cast<WirelessDevice *>(dev)->setAPList(apList);
-    }
-}
-
 void NetworkModel::onDeviceEnableChanged(const QString &device, const bool enabled)
 {
     NetworkDevice *dev = nullptr;
@@ -597,7 +587,7 @@ void NetworkModel::onAppProxyExistChanged(bool appProxyExist)
     Q_EMIT appProxyExistChanged(appProxyExist);
 }
 
-void NetworkModel::WirelessAccessPointsChanged(const QString &WirelessList)
+void NetworkModel::onWirelessAccessPointsChanged(const QString &WirelessList)
 {
     //当数据非json的时候,则这个里面的项为0,则下面的for不会被执行
     QJsonObject WirelessData = QJsonDocument::fromJson(WirelessList.toUtf8()).object();
@@ -605,7 +595,7 @@ void NetworkModel::WirelessAccessPointsChanged(const QString &WirelessList)
         for (auto const dev : m_devices) {
             //当类型不为无线网,path不为当前需要的device则进入下一个循环
             if (dev->type() != NetworkDevice::Wireless || dev->path() != Device) continue;
-            return dynamic_cast<WirelessDevice *>(dev)->WirelessUpdate(WirelessData.value(Device));
+            return dynamic_cast<WirelessDevice *>(dev)->setAPList(WirelessData.value(Device));
         }
     }
 }

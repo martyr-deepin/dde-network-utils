@@ -58,6 +58,7 @@ public:
     const QString activeWirelessConnName() const;
     const QString activeWirelessConnUuid() const;
     const QString activeWirelessConnSettingPath() const;
+    const QString activeWirelessConnSpecificObject() const;
 
     const QList<QJsonObject> connections() const { return m_connections; }
     const QList<QJsonObject> hotspotConnections() const { return m_hotspotConnections; }
@@ -68,7 +69,6 @@ public:
     inline const QString activeApPath() const { return m_activeApInfo.value("Path").toString(); }
     inline int activeApStrength() const { return m_activeApInfo.value("Strength").toInt(); }
     void updateWirlessAp();
-    void WirelessUpdate(const QJsonValue &WirelessData); //该接口给networkmodel使用
     
 Q_SIGNALS:
     void apAdded(const QJsonObject &apInfo) const;
@@ -86,18 +86,17 @@ Q_SIGNALS:
     void hostspotConnectionsChanged(const QList<QJsonObject> &connections) const;
 
 public Q_SLOTS:
-    void setAPList(const QString &apList);
+    void setAPList(const QJsonValue &wirelessList);
     void updateAPInfo(const QString &apInfo);
     void deleteAP(const QString &apInfo);
     void setActiveConnections(const QList<QJsonObject> &activeConns);
     void setActiveConnectionsInfo(const QList<QJsonObject> &activeConnsInfo);
     void setActiveHotspotInfo(const QJsonObject &hotspotInfo);
-    void setActiveApBySsid(const QString &ssid);
     void setConnections(const QList<QJsonObject> &connections);
     void setHotspotConnections(const QList<QJsonObject> &hotspotConnections);
 
 private:
-    QString activeApSsidByActiveConnUuid(const QString &activeWirelessConnUuid);
+    void setActiveApByPath(const QString &pathyy);
 
 private:
     QList<QJsonObject> m_activeConnections;
@@ -107,7 +106,6 @@ private:
     QMap<QString, QJsonObject> m_apsMap;
     QList<QJsonObject> m_connections;
     QList<QJsonObject> m_hotspotConnections;
-    QMap<QString,QString> m_ssidDatas;
 
     NetworkInter m_networkInter;
 };

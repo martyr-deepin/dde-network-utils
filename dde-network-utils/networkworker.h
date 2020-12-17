@@ -67,7 +67,7 @@ public Q_SLOTS:
     void queryProxyIgnoreHosts();
     void queryActiveConnInfo();
     void queryProxy(const QString &type);
-    void queryAccessPoints(const QString &devPath);
+    Q_DECL_DEPRECATED void queryAccessPoints(const QString &devPath);
     void queryConnectionSession(const QString &devPath, const QString &uuid);
     void queryDeviceStatus(const QString &devPath);
     void remanageDevice(const QString &devPath);
@@ -88,7 +88,6 @@ private Q_SLOTS:
     void queryProxyCB(QDBusPendingCallWatcher *w);
     void queryProxyMethodCB(QDBusPendingCallWatcher *w);
     void queryProxyIgnoreHostsCB(QDBusPendingCallWatcher *w);
-    void queryAccessPointsCB(QDBusPendingCallWatcher *w);
     void queryConnectionSessionCB(QDBusPendingCallWatcher *w);
     void queryDeviceStatusCB(QDBusPendingCallWatcher *w);
     void queryActiveConnInfoCB(QDBusPendingCallWatcher *w);

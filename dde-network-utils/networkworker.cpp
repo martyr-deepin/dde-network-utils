@@ -42,7 +42,7 @@ NetworkWorker::NetworkWorker(NetworkModel *model, QObject *parent, bool sync)
     
     connect(&m_networkInter, &NetworkInter::ConnectionsChanged, m_networkModel, &NetworkModel::onConnectionListChanged);
     connect(&m_networkInter, &NetworkInter::DeviceEnabled, m_networkModel, &NetworkModel::onDeviceEnableChanged);
-    connect(&m_networkInter, &NetworkInter::WirelessAccessPointsChanged, m_networkModel, &NetworkModel::WirelessAccessPointsChanged);
+    connect(&m_networkInter, &NetworkInter::WirelessAccessPointsChanged, m_networkModel, &NetworkModel::onWirelessAccessPointsChanged);
     connect(&m_networkInter, &NetworkInter::VpnEnabledChanged, m_networkModel, &NetworkModel::onVPNEnabledChanged);
     connect(m_networkModel, &NetworkModel::requestDeviceStatus, this, &NetworkWorker::queryDeviceStatus, Qt::QueuedConnection);
     connect(m_networkModel, &NetworkModel::deviceListChanged, this, [=]() {
@@ -59,7 +59,7 @@ NetworkWorker::NetworkWorker(NetworkModel *model, QObject *parent, bool sync)
     m_chainsInter->setSync(false);
 
     active(sync);
-    m_networkModel->WirelessAccessPointsChanged(m_networkInter.wirelessAccessPoints());
+    m_networkModel->onWirelessAccessPointsChanged(m_networkInter.wirelessAccessPoints());
 }
 
 void NetworkWorker::active(bool bSync)
@@ -79,12 +79,6 @@ void NetworkWorker::active(bool bSync)
     m_networkModel->onActiveConnectionsChanged(m_networkInter.activeConnections());
 
     queryActiveConnInfo();
-
-    for (auto device : m_networkModel->devices()) {
-        if (device->type() == NetworkDevice::Wireless) {
-            queryAccessPoints(device->path());
-        }
-    }
 
     const bool isAppProxyVaild = QProcess::execute("which", QStringList() << "/usr/bin/proxychains4") == 0;
     m_networkModel->onAppProxyExistChanged(isAppProxyVaild);
@@ -226,11 +220,7 @@ void NetworkWorker::queryActiveConnInfo()
 
 void NetworkWorker::queryAccessPoints(const QString &devPath)
 {
-    QDBusPendingCallWatcher *w = new QDBusPendingCallWatcher(m_networkInter.GetAccessPoints(QDBusObjectPath(devPath)));
-
-    w->setProperty("devPath", devPath);
-
-    connect(w, &QDBusPendingCallWatcher::finished, this, &NetworkWorker::queryAccessPointsCB);
+    return;
 }
 
 void NetworkWorker::queryConnectionSession(const QString &devPath, const QString &uuid)
@@ -356,15 +346,6 @@ void NetworkWorker::queryProxyIgnoreHostsCB(QDBusPendingCallWatcher *w)
     QDBusPendingReply<QString> reply = *w;
 
     m_networkModel->onProxyIgnoreHostsChanged(reply.value());
-
-    w->deleteLater();
-}
-
-void NetworkWorker::queryAccessPointsCB(QDBusPendingCallWatcher *w)
-{
-    QDBusPendingReply<QString> reply = *w;
-
-    m_networkModel->onDeviceAPListChanged(w->property("devPath").toString(), reply.value());
 
     w->deleteLater();
 }
