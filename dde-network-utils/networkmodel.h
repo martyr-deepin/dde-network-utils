@@ -144,9 +144,6 @@ private Q_SLOTS:
     void onActiveConnInfoChanged(const QString &conns);
     void onActiveConnectionsChanged(const QString &conns);
     void onConnectionSessionCreated(const QString &device, const QString &sessionPath);
-    void onDeviceAPListChanged(const QString &device, const QString &apList);
-    void onDeviceAPInfoChanged(const QString &device, const QString &apInfo);
-    void onDeviceAPRemoved(const QString &device, const QString &apInfo);
     void onDeviceEnableChanged(const QString &device, const bool enabled);
     void onChainsTypeChanged(const QString &type);
     void onChainsAddrChanged(const QString &addr);
@@ -158,11 +155,11 @@ private Q_SLOTS:
     void onConnectivityChanged(int connectivity);
     void onConnectivitySecondaryCheckFinished(bool connectivity);
     /**
-     * @def WirelessAccessPointsChanged
+     * @def onWirelessAccessPointsChanged
      * @brief 后端数据入口处,属性的修改会调用该函数
      * @param WirelessList
      */
-    void WirelessAccessPointsChanged(const QString &WirelessList);
+    void onWirelessAccessPointsChanged(const QString &WirelessList);
 private:
     bool containsDevice(const QString &devPath) const;
     NetworkDevice *device(const QString &devPath) const;
