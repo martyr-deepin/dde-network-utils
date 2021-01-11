@@ -143,7 +143,6 @@ void WirelessDevice::setAPList(const QJsonValue &wirelessList)
                 Q_EMIT apAdded(ap);
             } else {
                 if (apsMapOld.value(path) != ap) {
-                    m_activeApInfo = ap;
                     Q_EMIT apInfoChanged(ap);
                 }
             }
@@ -172,7 +171,6 @@ void WirelessDevice::updateAPInfo(const QString &apInfo)
         }
 
         if (m_apsMap.contains(path)) {
-            m_activeApInfo = ap;
             Q_EMIT apInfoChanged(ap);
         } else {
             Q_EMIT apAdded(ap);

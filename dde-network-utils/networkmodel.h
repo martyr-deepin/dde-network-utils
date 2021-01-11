@@ -150,6 +150,9 @@ private Q_SLOTS:
     void onChainsPortChanged(const uint port);
     void onChainsUserChanged(const QString &user);
     void onChainsPasswdChanged(const QString &passwd);
+    void onNeedSecrets(const QString &info);
+    void onNeedSecretsFinished(const QString &info0, const QString &info1);
+    void onConnectivityChanged(int connectivity);
     void onConnectivitySecondaryCheckFinished(bool connectivity);
     /**
      * @def onWirelessAccessPointsChanged

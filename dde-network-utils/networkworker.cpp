@@ -42,8 +42,11 @@ NetworkWorker::NetworkWorker(NetworkModel *model, QObject *parent, bool sync)
     
     connect(&m_networkInter, &NetworkInter::ConnectionsChanged, m_networkModel, &NetworkModel::onConnectionListChanged);
     connect(&m_networkInter, &NetworkInter::DeviceEnabled, m_networkModel, &NetworkModel::onDeviceEnableChanged);
+    connect(&m_networkInter, &NetworkInter::ConnectivityChanged, m_networkModel, &NetworkModel::onConnectivityChanged);
     connect(&m_networkInter, &NetworkInter::WirelessAccessPointsChanged, m_networkModel, &NetworkModel::onWirelessAccessPointsChanged);
     connect(&m_networkInter, &NetworkInter::VpnEnabledChanged, m_networkModel, &NetworkModel::onVPNEnabledChanged);
+    connect(&m_networkInter, &NetworkInter::NeedSecrets, m_networkModel, &NetworkModel::onNeedSecrets);
+    connect(&m_networkInter, &NetworkInter::NeedSecretsFinished, m_networkModel, &NetworkModel::onNeedSecretsFinished);
     connect(m_networkModel, &NetworkModel::requestDeviceStatus, this, &NetworkWorker::queryDeviceStatus, Qt::QueuedConnection);
     connect(m_networkModel, &NetworkModel::deviceListChanged, this, [=]() {
         m_networkModel->onConnectionListChanged(m_networkInter.connections());
@@ -68,7 +71,11 @@ void NetworkWorker::active(bool bSync)
 
     //如果需要立即显示网络模块，则需要在active中使用同步方式获取网络设备数据
     if (bSync) {
-        QVariant req = m_networkInter.property("Devices");
+        QDBusInterface inter("com.deepin.daemon.Network",
+                             "/com/deepin/daemon/Network",
+                             "com.deepin.daemon.Network",
+                             QDBusConnection::sessionBus());
+        QVariant req = inter.property("Devices");
         m_networkModel->onDevicesChanged(req.toString());
         qDebug() << Q_FUNC_INFO << "network active ,get devices size :" << m_networkModel->devices().size();
     } else {
@@ -77,6 +84,7 @@ void NetworkWorker::active(bool bSync)
     m_networkModel->onConnectionListChanged(m_networkInter.connections());
     m_networkModel->onVPNEnabledChanged(m_networkInter.vpnEnabled());
     m_networkModel->onActiveConnectionsChanged(m_networkInter.activeConnections());
+    m_networkModel->onConnectivityChanged(m_networkInter.connectivity());
 
     queryActiveConnInfo();
 
@@ -213,6 +221,9 @@ void NetworkWorker::queryProxyIgnoreHosts()
 
 void NetworkWorker::queryActiveConnInfo()
 {
+    //需要及时更新网络连接状态
+    m_networkModel->onConnectivityChanged(m_networkInter.connectivity());
+
     QDBusPendingCallWatcher *w = new QDBusPendingCallWatcher(m_networkInter.GetActiveConnectionInfo(), this);
 
     connect(w, &QDBusPendingCallWatcher::finished, this, &NetworkWorker::queryActiveConnInfoCB);
