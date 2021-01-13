@@ -48,6 +48,7 @@ NetworkWorker::NetworkWorker(NetworkModel *model, QObject *parent, bool sync)
     connect(m_networkModel, &NetworkModel::requestDeviceStatus, this, &NetworkWorker::queryDeviceStatus, Qt::QueuedConnection);
     connect(m_networkModel, &NetworkModel::deviceListChanged, this, [=]() {
         m_networkModel->onConnectionListChanged(m_networkInter.connections());
+        queryActiveConnInfo();
     }, Qt::QueuedConnection);
 
     connect(m_chainsInter, &ProxyChains::IPChanged, model, &NetworkModel::onChainsAddrChanged);
