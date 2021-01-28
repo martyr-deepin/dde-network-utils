@@ -646,7 +646,8 @@ void NetworkModel::onWirelessAccessPointsChanged(const QString &WirelessList)
         for (auto const dev : m_devices) {
             //当类型不为无线网,path不为当前需要的device则进入下一个循环
             if (dev->type() != NetworkDevice::Wireless || dev->path() != Device) continue;
-            return dynamic_cast<WirelessDevice *>(dev)->setAPList(WirelessData.value(Device));
+            dynamic_cast<WirelessDevice *>(dev)->setAPList(WirelessData.value(Device));
         }
     }
+    return;
 }
