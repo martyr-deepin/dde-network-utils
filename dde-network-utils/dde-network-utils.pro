@@ -39,8 +39,17 @@ isEmpty(PREFIX) {
     PREFIX = /usr
 }
 
-target.path = $$PREFIX/lib
-includes.path = $$PREFIX/include/libddenetworkutils
+isEmpty(LIB_INSTALL_DIR) {
+    target.path = $$[QT_INSTALL_LIBS]
+} else {
+    target.path = $$LIB_INSTALL_DIR
+}
+
+isEmpty(INCLUDE_INSTALL_DIR) {
+    includes.path = $$PREFIX/include/libddenetworkutils
+} else {
+    includes.path = $$INCLUDE_INSTALL_DIR/libddenetworkutils
+}
 
 qm_files.path = $${PREFIX}/share/dde-network-utils/translations/
 qm_files.files = ../translations/*.qm
