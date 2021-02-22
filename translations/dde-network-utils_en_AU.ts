@@ -2,68 +2,66 @@
 <context>
     <name>dde::network::NetworkDevice</name>
     <message>
-        <location filename="../networkdevice.cpp" line="97"/>
+        <location filename="../dde-network-utils/networkdevice.cpp" line="97"/>
+        <location filename="../dde-network-utils/networkdevice.cpp" line="105"/>
+        <location filename="../dde-network-utils/networkdevice.cpp" line="149"/>
         <source>Disconnected</source>
         <translation>Disconnected</translation>
     </message>
     <message>
-        <location filename="../networkdevice.cpp" line="99"/>
-        <location filename="../networkdevice.cpp" line="139"/>
+        <location filename="../dde-network-utils/networkdevice.cpp" line="99"/>
+        <location filename="../dde-network-utils/networkdevice.cpp" line="142"/>
         <source>Connecting</source>
-        <translation type="unfinished"/>
+        <translation>Connecting</translation>
     </message>
     <message>
-        <location filename="../networkdevice.cpp" line="100"/>
-        <location filename="../networkdevice.cpp" line="140"/>
+        <location filename="../dde-network-utils/networkdevice.cpp" line="100"/>
+        <location filename="../dde-network-utils/networkdevice.cpp" line="143"/>
         <source>Authenticating</source>
-        <translation type="unfinished"/>
+        <translation>Authenticating</translation>
     </message>
     <message>
-        <location filename="../networkdevice.cpp" line="102"/>
+        <location filename="../dde-network-utils/networkdevice.cpp" line="102"/>
         <source>Obtaining Address</source>
-        <translation type="unfinished"/>
+        <translation>Obtaining Address</translation>
     </message>
     <message>
-        <location filename="../networkdevice.cpp" line="103"/>
-        <location filename="../networkdevice.cpp" line="144"/>
+        <location filename="../dde-network-utils/networkdevice.cpp" line="103"/>
+        <location filename="../dde-network-utils/networkdevice.cpp" line="147"/>
         <source>Connected</source>
         <translation>Connected</translation>
     </message>
     <message>
-        <location filename="../networkdevice.cpp" line="105"/>
-        <location filename="../networkdevice.cpp" line="146"/>
+        <location filename="../dde-network-utils/networkdevice.cpp" line="107"/>
+        <location filename="../dde-network-utils/networkdevice.cpp" line="151"/>
         <source>Failed</source>
         <translation>Failed</translation>
     </message>
     <message>
-        <location filename="../networkdevice.cpp" line="115"/>
+        <location filename="../dde-network-utils/networkdevice.cpp" line="117"/>
         <source>Device disabled</source>
-        <translation type="unfinished"/>
+        <translation>Device disabled</translation>
     </message>
     <message>
-        <location filename="../networkdevice.cpp" line="119"/>
+        <location filename="../dde-network-utils/networkdevice.cpp" line="121"/>
         <source>Connected but no Internet access</source>
-        <translation type="unfinished"/>
+        <translation>Connected but no Internet access</translation>
     </message>
     <message>
-        <location filename="../networkdevice.cpp" line="123"/>
-        <source>Failed to obtain IP address</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../networkdevice.cpp" line="133"/>
+        <location filename="../dde-network-utils/networkdevice.cpp" line="136"/>
         <source>Network cable unplugged</source>
-        <translation type="unfinished"/>
+        <translation>Network cable unplugged</translation>
     </message>
     <message>
-        <location filename="../networkdevice.cpp" line="137"/>
+        <location filename="../dde-network-utils/networkdevice.cpp" line="126"/>
+        <location filename="../dde-network-utils/networkdevice.cpp" line="140"/>
         <source>Not connected</source>
-        <translation type="unfinished"/>
+        <translation>Not connected</translation>
     </message>
     <message>
-        <location filename="../networkdevice.cpp" line="143"/>
+        <location filename="../dde-network-utils/networkdevice.cpp" line="146"/>
         <source>Obtaining IP address</source>
-        <translation type="unfinished"/>
+        <translation>Obtaining IP address</translation>
     </message>
 </context>
 </TS>
