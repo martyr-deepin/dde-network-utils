@@ -1,7 +1,7 @@
 TEMPLATE = subdirs
 
 SUBDIRS += $$PWD/dde-network-utils/dde-network-utils.pro \
-           $$PWD/tst_dde-network-utils/tst_dde-network-utils.pro
+           $$PWD/tests/dde-network-utils/tst_dde-network-utils.pro
 
 # Automating generation .qm files from .ts files
 CONFIG(release, debug|release) {

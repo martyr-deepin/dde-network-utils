@@ -17,7 +17,7 @@ LIBS += -lgtest
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
-include(../dde-network-utils/src.pri)
+include(../../dde-network-utils/src.pri)
 
 SOURCES += \
     main.cpp \
@@ -27,6 +27,6 @@ SOURCES += \
     tst_networkworker.cpp \
     tst_wireddevice.cpp \
     tst_wirelessdevice.cpp
-INCLUDEPATH += ../dde-network-utils
+INCLUDEPATH += ../../dde-network-utils
 
 RESOURCES +=
