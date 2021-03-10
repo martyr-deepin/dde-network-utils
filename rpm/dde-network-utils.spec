@@ -12,6 +12,7 @@ BuildRequires:  dde-qt-dbus-factory-devel
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  qt5-linguist
 BuildRequires:  pkgconfig(gsettings-qt)
+BuildRequires:  gtest-devel
 
 %description
 Deepin desktop-environment - network utils.
