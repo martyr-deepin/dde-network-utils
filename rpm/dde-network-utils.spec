@@ -1,5 +1,5 @@
 Name:           dde-network-utils
-Version:        5.3.0.3
+Version:        5.4.4
 Release:        1
 Summary:        Deepin desktop-environment - network utils
 License:        GPLv3
@@ -27,7 +27,7 @@ Header files and libraries for %{name}.
 %prep
 %setup -q -n %{name}-%{version}
 sed -i 's|lrelease|lrelease-qt5|' translate_generation.sh
-sed -i 's|/lib$|/%{_lib}|' dde-network-utils.pro
+sed -i 's|/lib$|/%{_lib}|' dde-network-utils/dde-network-utils.pro
 
 %build
 %qmake_qt5 PREFIX=%{_prefix}
@@ -38,31 +38,15 @@ sed -i 's|/lib$|/%{_lib}|' dde-network-utils.pro
 
 %files
 %doc README.md
-%{_libdir}/lib*.so.1
-%{_libdir}/lib*.so.1.*
+%{_libdir}/libdde-network-utils.so.1*
 %{_datadir}/%{name}/
 
 %files devel
 %{_includedir}/libddenetworkutils/
 %{_libdir}/pkgconfig/*.pc
-%{_libdir}/lib*.so
+%{_libdir}/libdde-network-utils.so
 
 %changelog
-* Thu Jan 31 2019 mosquito <sensor.wen@gmail.com> - 0.0.9-1
-- Update to 0.0.9
-
-* Thu Jan 31 2019 Fedora Release Engineering <releng@fedoraproject.org> - 0.0.8.1-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
-
-* Wed Dec 12 2018 mosquito <sensor.wen@gmail.com> - 0.0.8.1-1
-- Update to 0.0.8.1
-
-* Fri Nov  9 2018 mosquito <sensor.wen@gmail.com> - 0.0.7-1
-- Update to 0.0.7
-
-* Thu Aug  2 2018 mosquito <sensor.wen@gmail.com> - 0.0.4-1
-- Update to 0.0.4
-
-* Mon Jul 23 2018 mosquito <sensor.wen@gmail.com> - 0.0.3-1
-- Initial package build
+* Thu Mar 11 2021 uniontech <uoser@uniontech.com> - 5.4.4-1
+- Update to 5.4.4
 
