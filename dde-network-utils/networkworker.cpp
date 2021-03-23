@@ -85,7 +85,7 @@ void NetworkWorker::active(bool bSync)
     m_networkModel->onConnectionListChanged(m_networkInter.connections());
     m_networkModel->onVPNEnabledChanged(m_networkInter.vpnEnabled());
     m_networkModel->onActiveConnectionsChanged(m_networkInter.activeConnections());
-    m_networkModel->onConnectivityChanged(m_networkInter.connectivity());
+    m_networkModel->onConnectivityChanged(static_cast<int>(m_networkInter.connectivity()));
 
     queryActiveConnInfo();
 
@@ -223,7 +223,7 @@ void NetworkWorker::queryProxyIgnoreHosts()
 void NetworkWorker::queryActiveConnInfo()
 {
     //需要及时更新网络连接状态
-    m_networkModel->onConnectivityChanged(m_networkInter.connectivity());
+    m_networkModel->onConnectivityChanged(static_cast<int>(m_networkInter.connectivity()));
 
     QDBusPendingCallWatcher *w = new QDBusPendingCallWatcher(m_networkInter.GetActiveConnectionInfo(), this);
 
@@ -232,6 +232,7 @@ void NetworkWorker::queryActiveConnInfo()
 
 void NetworkWorker::queryAccessPoints(const QString &devPath)
 {
+    Q_UNUSED(devPath)
     return;
 }
 
