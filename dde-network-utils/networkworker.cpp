@@ -29,17 +29,39 @@
 
 using namespace dde::network;
 
+const QString networkService = "com.deepin.daemon.Network";
+const QString networkPath = "/com/deepin/daemon/Network";
+
 NetworkWorker::NetworkWorker(NetworkModel *model, QObject *parent, bool sync)
     : QObject(parent),
-      m_networkInter("com.deepin.daemon.Network", "/com/deepin/daemon/Network", QDBusConnection::sessionBus(), this),
-      m_chainsInter(new ProxyChains("com.deepin.daemon.Network", "/com/deepin/daemon/Network/ProxyChains", QDBusConnection::sessionBus(), this)),
+      m_networkInter(networkService, networkPath, QDBusConnection::sessionBus(), this),
+      m_chainsInter(new ProxyChains(networkService, "/com/deepin/daemon/Network/ProxyChains", QDBusConnection::sessionBus(), this)),
       m_networkModel(model)
 {
+    // 网络服务加载很慢时，需监听 服务启动后，刷新网络设备信息
+    auto req = QDBusConnection::sessionBus().interface()->isServiceRegistered(networkService);
+    if (!req.value()) {
+        qInfo() << networkService << "is not registered, waiting for registration";
+        QDBusServiceWatcher *serviceWatcher = new QDBusServiceWatcher(this);
+        serviceWatcher->setConnection(QDBusConnection::sessionBus());
+        serviceWatcher->addWatchedService(networkService);
+        connect(serviceWatcher, &QDBusServiceWatcher::serviceRegistered, [this] {
+            NetworkInter netInter(networkService, networkPath, QDBusConnection::sessionBus(), this);
+            QString devices = netInter.devices();
+            qInfo() << networkService <<  "is registered";
+            if (!devices.isEmpty()){
+                m_networkModel->onDevicesChanged(netInter.devices());
+            } else {
+                qInfo() << "network devices is empty";
+            }
+        });
+    }
+
     //对网络适配器的监听，当适配器消失及时响应
     connect(&m_networkInter, &NetworkInter::ActiveConnectionsChanged, this, &NetworkWorker::queryActiveConnInfo, Qt::QueuedConnection);
     connect(&m_networkInter, &NetworkInter::ActiveConnectionsChanged, m_networkModel, &NetworkModel::onActiveConnectionsChanged);
     connect(&m_networkInter, &NetworkInter::DevicesChanged, m_networkModel, &NetworkModel::onDevicesChanged);
-    
+
     connect(&m_networkInter, &NetworkInter::ConnectionsChanged, m_networkModel, &NetworkModel::onConnectionListChanged);
     connect(&m_networkInter, &NetworkInter::DeviceEnabled, m_networkModel, &NetworkModel::onDeviceEnableChanged);
     connect(&m_networkInter, &NetworkInter::ConnectivityChanged, m_networkModel, &NetworkModel::onConnectivityChanged);
@@ -72,9 +94,9 @@ void NetworkWorker::active(bool bSync)
 
     //如果需要立即显示网络模块，则需要在active中使用同步方式获取网络设备数据
     if (bSync) {
-        QDBusInterface inter("com.deepin.daemon.Network",
-                             "/com/deepin/daemon/Network",
-                             "com.deepin.daemon.Network",
+        QDBusInterface inter(networkService,
+                             networkPath,
+                             networkService,
                              QDBusConnection::sessionBus());
         QVariant req = inter.property("Devices");
         m_networkModel->onDevicesChanged(req.toString());
