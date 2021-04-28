@@ -237,6 +237,12 @@ void NetworkModel::onDevicesChanged(const QString &devices)
         {
             const auto info = l.toObject();
             const QString path = info.value("Path").toString();
+            bool managed = info.value("Managed").toBool();
+
+            if (!managed) {
+                qDebug() << "device: " << path << "ignored due to unmanged";
+                continue;
+            }
 
             // 根据标志位InterfaceFlags判断网络连接是否有效
             if (type != NetworkDevice::Wireless) {
