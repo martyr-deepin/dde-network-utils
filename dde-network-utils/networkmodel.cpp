@@ -226,6 +226,8 @@ void NetworkModel::onDevicesChanged(const QString &devices)
 
     bool changed = false;
 
+    m_deviceInterface.clear();
+
     for (auto it(data.constBegin()); it != data.constEnd(); ++it) {
         const auto type = parseDeviceType(it.key());
         const auto list = it.value().toArray();
@@ -238,6 +240,10 @@ void NetworkModel::onDevicesChanged(const QString &devices)
             const auto info = l.toObject();
             const QString path = info.value("Path").toString();
             bool managed = info.value("Managed").toBool();
+            QString interface = info.value("Interface").toString();
+
+            if (!m_deviceInterface.contains(interface))
+                m_deviceInterface << interface;
 
             if (!managed) {
                 qDebug() << "device: " << path << "ignored due to unmanged";

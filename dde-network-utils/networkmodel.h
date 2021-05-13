@@ -102,6 +102,7 @@ public:
     const QJsonObject connectionByUuid(const QString &uuid) const;
     const QJsonObject connectionByPath(const QString &connPath) const;
     const QJsonObject activeConnObjectByUuid(const QString &uuid) const;
+    inline const QStringList deviceInterface() const { return m_deviceInterface; };
 
 Q_SIGNALS:
     void connectionListChanged() const;
@@ -182,6 +183,7 @@ private:
     QList<QJsonObject> m_activeConns;
     QMap<QString, ProxyConfig> m_proxies;
     QMap<QString, QList<QJsonObject>> m_connections;
+    QStringList m_deviceInterface;
 
     static Connectivity m_Connectivity;
 };
