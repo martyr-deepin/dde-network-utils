@@ -38,6 +38,7 @@ using namespace dde::network;
 #define CONNECTED  2
 
 Connectivity NetworkModel::m_Connectivity(Connectivity::Full);
+QStringList NetworkModel::m_deviceInterface;
 
 NetworkDevice::DeviceType parseDeviceType(const QString &type)
 {
