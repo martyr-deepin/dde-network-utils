@@ -201,6 +201,11 @@ const QString NetworkDevice::usingHwAdr() const
     return clonedAdr.isEmpty() ? hwAdr : clonedAdr;
 }
 
+const QString NetworkDevice::interfaceName() const
+{
+    return m_deviceInfo.value("Interface").toString();
+}
+
 void NetworkDevice::updateDeviceInfo(const QJsonObject &devInfo)
 {
     m_deviceInfo = devInfo;

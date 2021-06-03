@@ -329,6 +329,9 @@ void NetworkModel::onConnectionListChanged(const QString &conns)
     QMap<QString, QList<QJsonObject>> commonConnections;
     QMap<QString, QMap<QString, QList<QJsonObject>>> deviceConnections;
 
+    QMap<QString, QList<QJsonObject>> wiredCommonConnections;
+    QMap<QString, QMap<QString, QList<QJsonObject>>> wiredDeviceConnections;
+
     // 解析所有的 connection
     const QJsonObject connsObject = QJsonDocument::fromJson(conns.toUtf8()).object();
     for (auto it(connsObject.constBegin()); it != connsObject.constEnd(); ++it) {
@@ -350,6 +353,13 @@ void NetworkModel::onConnectionListChanged(const QString &conns)
             } else {
                 deviceConnections[hwAddr][connType].append(connection);
             }
+
+            const auto &interface = connection.value("IfcName").toString();
+            if (interface.isEmpty()) {
+                wiredCommonConnections[connType].append(connection);
+            } else {
+                wiredDeviceConnections[interface][connType].append(connection);
+            }
         }
     }
 
@@ -357,12 +367,14 @@ void NetworkModel::onConnectionListChanged(const QString &conns)
     for (NetworkDevice *dev : m_devices) {
         const QString &hwAddr = dev->realHwAdr();
         const QMap<QString, QList<QJsonObject>> &connsByType = deviceConnections.value(hwAddr);
+        const QString &inter = dev->interfaceName();
+        const QMap<QString, QList<QJsonObject>> &connsByInter = wiredDeviceConnections.value(inter);
         QList<QJsonObject> destConns;
 
         switch (dev->type()) {
         case NetworkDevice::Wired: {
-            destConns += commonConnections.value("wired");
-            destConns += connsByType.value("wired");
+            destConns += wiredCommonConnections.value("wired");
+            destConns += connsByInter.value("wired");
             WiredDevice *wdDevice = static_cast<WiredDevice *>(dev);
             wdDevice->setConnections(destConns);
             break;

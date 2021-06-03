@@ -80,6 +80,7 @@ public:
     const QString path() const;
     const QString realHwAdr() const;
     const QString usingHwAdr() const;
+    const QString interfaceName() const;
 
 Q_SIGNALS:
     void removed() const;
