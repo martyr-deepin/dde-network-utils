@@ -620,15 +620,6 @@ void NetworkModel::onConnectivityChanged(int connectivity)
 
     m_Connectivity = conn;
 
-    // if the new connectivity state from NetworkManager is not Full,
-    // check it again use our urls
-    if (m_Connectivity != Full) {
-        if (!m_connectivityCheckThread->isRunning()) {
-            m_connectivityCheckThread->start();
-        }
-        Q_EMIT needCheckConnectivitySecondary();
-    }
-
     Q_EMIT connectivityChanged(m_Connectivity);
 }
 
