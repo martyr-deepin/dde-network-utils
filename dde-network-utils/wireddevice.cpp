@@ -88,7 +88,9 @@ const QJsonObject WiredDevice::activeWiredConnectionInfo() const
 {
     QJsonObject activeWired;
     for (const QJsonObject &activeConn : m_activeConnectionsInfo) {
-        if (activeConn.value("ConnectionType").toString() == "wired") {
+        // 当开启DSL连接时，类型为 pppoe
+        if (activeConn.value("ConnectionType").toString() == "wired"
+            || activeConn.value("ConnectionType").toString() == "pppoe") {
             activeWired = activeConn;
             break;
         }
