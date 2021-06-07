@@ -119,10 +119,18 @@ void WirelessDevice::setAPList(const QString &apList)
 
     const QJsonArray &apArray = QJsonDocument::fromJson(apList.toUtf8()).array();
     for (auto item : apArray) {
-        const QJsonObject &ap = item.toObject();
+        QJsonObject ap = item.toObject();
         const QString &path = ap.value("Path").toString();
 
         if (!path.isEmpty()) {
+            // 有可能存在 Ssid == "" 的数据，此时将Ssid赋值为之前同path的值
+            if (ap.value("Ssid").toString().isEmpty() && apsMapOld.contains(path))
+                ap.insert("Ssid", apsMapOld[path].value("Ssid"));
+
+            // 如果还为 "" 则不处理
+            if (ap.value("Ssid").toString().isEmpty())
+                continue;
+
             if (ap.value("Ssid").toString() == activeApSsid() &&
                     ap.value("Strength").toInt() > activeApStrength()) {
                 m_activeApInfo = ap;
@@ -151,10 +159,18 @@ void WirelessDevice::setAPList(const QString &apList)
 
 void WirelessDevice::updateAPInfo(const QString &apInfo)
 {
-    const auto &ap = QJsonDocument::fromJson(apInfo.toUtf8()).object();
+    auto ap = QJsonDocument::fromJson(apInfo.toUtf8()).object();
     const auto &path = ap.value("Path").toString();
 
     if (!path.isEmpty()) {
+        // 有可能存在 Ssid == "" 的数据，此时将Ssid赋值为之前同path的值
+        if (ap.value("Ssid").toString().isEmpty() && m_apsMap.contains(path))
+            ap.insert("Ssid", m_apsMap[path].value("Ssid"));
+
+        // 如果还为 "" 则不处理
+        if (ap.value("Ssid").toString().isEmpty())
+            return;
+
         if (ap.value("Ssid").toString() == activeApSsid() &&
                 ap.value("Strength").toInt() > activeApStrength()) {
             m_activeApInfo = ap;
