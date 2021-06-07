@@ -7,7 +7,6 @@ Build-Depends:
  libdframeworkdbus-dev (>= 1.0.2),
  pkg-config,
  qt5-qmake,
- qt5-default,
  qttools5-dev-tools
 Standards-Version: 3.9.8
 Homepage: https://github.com/linuxdeepin/dde-network-utils
@@ -16,7 +15,7 @@ Package: libdde-network-utils
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: DDE network utils
- DDE network utils.
+ DDE network utils module.
 
 Package: libdde-network-utils-dev
 Architecture: any
@@ -24,4 +23,4 @@ Section: libdevel
 Depends:
  libdde-network-utils, ${misc:Depends}
 Description: DDE network utils dev
- DDE network utils dev.
+ DDE network utils dev module.
