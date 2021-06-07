@@ -6,6 +6,7 @@ Build-Depends:
  debhelper (>= 9),
  libdframeworkdbus-dev (>= 1.0.2),
  pkg-config,
+ qtbase5-dev,
  qt5-qmake,
  qttools5-dev-tools
 Standards-Version: 3.9.8
