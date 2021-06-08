@@ -402,7 +402,9 @@ void NetworkWorker::queryActiveConnInfoCB(QDBusPendingCallWatcher *w)
 {
     QDBusPendingReply<QString> reply = *w;
 
-    m_networkModel->onActiveConnInfoChanged(reply.value());
+    if (!reply.isError()) {
+        m_networkModel->onActiveConnInfoChanged(reply.value());
+    }
 
     w->deleteLater();
 }
