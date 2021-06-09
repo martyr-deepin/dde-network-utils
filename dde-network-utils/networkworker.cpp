@@ -339,8 +339,10 @@ void NetworkWorker::activateAccessPointCB(QDBusPendingCallWatcher *w)
 {
     QDBusPendingReply<QDBusObjectPath> reply = *w;
 
-    m_networkModel->onActivateAccessPointDone(w->property("devPath").toString(),
-            w->property("apPath").toString(), w->property("uuid").toString(), reply.value());
+    if (!reply.isError()) {
+        m_networkModel->onActivateAccessPointDone(w->property("devPath").toString(),
+                w->property("apPath").toString(), w->property("uuid").toString(), reply.value());
+    }
 
     w->deleteLater();
 }
@@ -349,7 +351,8 @@ void NetworkWorker::queryAutoProxyCB(QDBusPendingCallWatcher *w)
 {
     QDBusPendingReply<QString> reply = *w;
 
-    m_networkModel->onAutoProxyChanged(reply.value());
+    if (!reply.isError())
+        m_networkModel->onAutoProxyChanged(reply.value());
 
     w->deleteLater();
 }
@@ -371,7 +374,8 @@ void NetworkWorker::queryProxyMethodCB(QDBusPendingCallWatcher *w)
 {
     QDBusPendingReply<QString> reply = *w;
 
-    m_networkModel->onProxyMethodChanged(reply.value());
+    if (!reply.isError())
+        m_networkModel->onProxyMethodChanged(reply.value());
 
     w->deleteLater();
 }
@@ -380,7 +384,8 @@ void NetworkWorker::queryProxyIgnoreHostsCB(QDBusPendingCallWatcher *w)
 {
     QDBusPendingReply<QString> reply = *w;
 
-    m_networkModel->onProxyIgnoreHostsChanged(reply.value());
+    if (!reply.isError())
+        m_networkModel->onProxyIgnoreHostsChanged(reply.value());
 
     w->deleteLater();
 }
@@ -389,7 +394,8 @@ void NetworkWorker::queryConnectionSessionCB(QDBusPendingCallWatcher *w)
 {
     QDBusPendingReply<QDBusObjectPath> reply = *w;
 
-    m_networkModel->onConnectionSessionCreated(w->property("devPath").toString(), reply.value().path());
+    if (!reply.isError())
+        m_networkModel->onConnectionSessionCreated(w->property("devPath").toString(), reply.value().path());
 
     w->deleteLater();
 }
@@ -398,7 +404,8 @@ void NetworkWorker::queryDeviceStatusCB(QDBusPendingCallWatcher *w)
 {
     QDBusPendingReply<bool> reply = *w;
 
-    m_networkModel->onDeviceEnableChanged(w->property("devPath").toString(), reply.value());
+    if (!reply.isError())
+        m_networkModel->onDeviceEnableChanged(w->property("devPath").toString(), reply.value());
 
     w->deleteLater();
 }
@@ -407,7 +414,8 @@ void NetworkWorker::queryActiveConnInfoCB(QDBusPendingCallWatcher *w)
 {
     QDBusPendingReply<QString> reply = *w;
 
-    m_networkModel->onActiveConnInfoChanged(reply.value());
+    if (!reply.isError())
+        m_networkModel->onActiveConnInfoChanged(reply.value());
 
     w->deleteLater();
 }
