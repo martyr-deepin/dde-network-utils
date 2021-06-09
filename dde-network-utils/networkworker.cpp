@@ -36,6 +36,9 @@ NetworkWorker::NetworkWorker(NetworkModel *model, QObject *parent, bool sync)
       m_networkModel(model)
 {
     connect(&m_networkInter, &NetworkInter::ActiveConnectionsChanged, this, &NetworkWorker::queryActiveConnInfo, Qt::QueuedConnection);
+    //网络信息发生变化时，重新获取
+    connect(&m_networkInter, &NetworkInter::ActiveConnectionInfoChanged, this, &NetworkWorker::queryActiveConnInfo, Qt::QueuedConnection);
+
     connect(&m_networkInter, &NetworkInter::ActiveConnectionsChanged, m_networkModel, &NetworkModel::onActiveConnectionsChanged);
     connect(&m_networkInter, &NetworkInter::DevicesChanged, m_networkModel, &NetworkModel::onDevicesChanged);
     connect(&m_networkInter, &NetworkInter::ConnectionsChanged, m_networkModel, &NetworkModel::onConnectionListChanged);
@@ -45,6 +48,7 @@ NetworkWorker::NetworkWorker(NetworkModel *model, QObject *parent, bool sync)
     connect(&m_networkInter, &NetworkInter::VpnEnabledChanged, m_networkModel, &NetworkModel::onVPNEnabledChanged);
     connect(&m_networkInter, &NetworkInter::NeedSecrets, m_networkModel, &NetworkModel::onNeedSecrets);
     connect(&m_networkInter, &NetworkInter::NeedSecretsFinished, m_networkModel, &NetworkModel::onNeedSecretsFinished);
+
     connect(m_networkModel, &NetworkModel::requestDeviceStatus, this, &NetworkWorker::queryDeviceStatus, Qt::QueuedConnection);
     connect(m_networkModel, &NetworkModel::deviceListChanged, this, [=]() {
         m_networkModel->onConnectionListChanged(m_networkInter.connections());
