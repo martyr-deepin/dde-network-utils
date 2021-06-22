@@ -54,6 +54,7 @@ public:
     const QString activeWirelessConnName() const;
     const QString activeWirelessConnUuid() const;
     const QString activeWirelessConnSettingPath() const;
+    const QString activeWirelessConnSpecificObject() const;
 
     const QList<QJsonObject> connections() const { return m_connections; }
     const QList<QJsonObject> hotspotConnections() const { return m_hotspotConnections; }
@@ -86,12 +87,11 @@ public Q_SLOTS:
     void setActiveConnections(const QList<QJsonObject> &activeConns);
     void setActiveConnectionsInfo(const QList<QJsonObject> &activeConnsInfo);
     void setActiveHotspotInfo(const QJsonObject &hotspotInfo);
-    void setActiveApBySsid(const QString &ssid);
     void setConnections(const QList<QJsonObject> &connections);
     void setHotspotConnections(const QList<QJsonObject> &hotspotConnections);
 
 private:
-    QString activeApSsidByActiveConnUuid(const QString &activeWirelessConnUuid);
+    void setActiveApByPath(const QString &path);
 
 private:
     QList<QJsonObject> m_activeConnections;

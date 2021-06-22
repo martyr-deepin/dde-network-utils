@@ -103,6 +103,12 @@ const QString WirelessDevice::activeWirelessConnSettingPath() const
     return conn.isEmpty() ? QString() : conn.value("SettingPath").toString();
 }
 
+const QString WirelessDevice::activeWirelessConnSpecificObject() const
+{
+    const QJsonObject &conn = activeWirelessConnectionInfo();
+    return conn.isEmpty() ? QString() : conn.value("SpecificObject").toString();
+}
+
 const QJsonArray WirelessDevice::apList() const
 {
     QJsonArray apArray;
@@ -131,8 +137,7 @@ void WirelessDevice::setAPList(const QString &apList)
             if (ap.value("Ssid").toString().isEmpty())
                 continue;
 
-            if (ap.value("Ssid").toString() == activeApSsid() &&
-                    ap.value("Strength").toInt() > activeApStrength()) {
+            if (ap.value("Path").toString() == activeApPath()) {
                 m_activeApInfo = ap;
                 Q_EMIT activeApInfoChanged(m_activeApInfo);
             }
@@ -154,7 +159,7 @@ void WirelessDevice::setAPList(const QString &apList)
         }
     }
 
-    setActiveApBySsid(activeApSsidByActiveConnUuid(activeWirelessConnUuid()));
+    setActiveApByPath(activeWirelessConnSpecificObject());
 }
 
 void WirelessDevice::updateAPInfo(const QString &apInfo)
@@ -171,8 +176,7 @@ void WirelessDevice::updateAPInfo(const QString &apInfo)
         if (ap.value("Ssid").toString().isEmpty())
             return;
 
-        if (ap.value("Ssid").toString() == activeApSsid() &&
-                ap.value("Strength").toInt() > activeApStrength()) {
+        if (ap.value("Path").toString() == activeApPath()) {
             m_activeApInfo = ap;
             Q_EMIT activeApInfoChanged(m_activeApInfo);
         }
@@ -215,7 +219,7 @@ void WirelessDevice::setActiveConnectionsInfo(const QList<QJsonObject> &activeCo
         m_activeApInfo = QJsonObject();
         Q_EMIT activeApInfoChanged(m_activeApInfo);
     } else {
-        setActiveApBySsid(activeApSsidByActiveConnUuid(activeWirelessConnUuid()));
+        setActiveApByPath(activeWirelessConnSpecificObject());
     }
 
     Q_EMIT activeWirelessConnectionInfoChanged(activeWirelessConnectionInfo());
@@ -232,27 +236,18 @@ void WirelessDevice::setActiveHotspotInfo(const QJsonObject &hotspotInfo)
         Q_EMIT hotspotEnabledChanged(hotspotEnabled());
 }
 
-void WirelessDevice::setActiveApBySsid(const QString &ssid)
+void WirelessDevice::setActiveApByPath(const QString &path)
 {
-    if (m_apsMap.size() > 0) {
-        // get the use same ssid Aps
-        QList<QJsonObject> sameSsidAps;
-        for (const auto &ap : m_apsMap.values()) {
-            if (ap.value("Ssid").toString() == ssid) {
-                sameSsidAps.append(ap);
-            }
-        }
-
-        // set active Ap by strength
-        if (sameSsidAps.size() > 0) {
-            for (const auto &ap : sameSsidAps) {
-                if (activeApStrength() < ap.value("Strength").toInt()) {
-                    m_activeApInfo = ap;
-                }
-            }
-            Q_EMIT activeApInfoChanged(m_activeApInfo);
-        }
+    if (path == "") {
+        m_activeApInfo = QJsonObject();
+    } else {
+        auto it = m_apsMap.find(path);
+        if (it == m_apsMap.end()) 
+            return;
+        m_activeApInfo = it.value();
     }
+
+    Q_EMIT activeApInfoChanged(m_activeApInfo);
 }
 
 void WirelessDevice::setConnections(const QList<QJsonObject> &connections)
@@ -267,18 +262,4 @@ void WirelessDevice::setHotspotConnections(const QList<QJsonObject> &hotspotConn
     m_hotspotConnections = hotspotConnections;
 
     Q_EMIT hostspotConnectionsChanged(m_hotspotConnections);
-}
-
-QString WirelessDevice::activeApSsidByActiveConnUuid(const QString &activeConnUuid)
-{
-    QString activeApSsid("");
-
-    for (const QJsonObject &conn : m_connections) {
-        if (conn.value("Uuid").toString() == activeConnUuid) {
-            activeApSsid = conn.value("Ssid").toString();
-            break;
-        }
-    }
-
-    return activeApSsid;
 }
