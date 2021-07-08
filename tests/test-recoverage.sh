@@ -16,7 +16,7 @@ rm -rf $BUILD_DIR
 mkdir $BUILD_DIR
 cd $BUILD_DIR
 qmake ../dde-network-utils/
-make check
+TESTARGS="--gtest_output=xml:dde_test_report_network_utils.xml"  make check -j$(nproc)
 
 lcov -d ./ -c -o coverage_all.info
 #lcov --extract coverage_all.info $EXTRACT_ARGS --output-file coverage.info
