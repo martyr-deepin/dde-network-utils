@@ -3,7 +3,9 @@
 #include <QCoreApplication>
 #include <QDebug>
 
-#define private public
+#ifdef SANITIZER_CHECK
+#include <sanitizer/asan_interface.h>
+#endif
 
 int main(int argc, char *argv[])
 {
@@ -13,5 +15,10 @@ int main(int argc, char *argv[])
     ::testing::InitGoogleTest(&argc, argv);
     int ret = RUN_ALL_TESTS();
     qDebug() << "end dde-network-utils test cases ..............";
+
+#ifdef SANITIZER_CHECK
+      __sanitizer_set_report_path("asan.log");
+#endif
+
     return ret;
 }

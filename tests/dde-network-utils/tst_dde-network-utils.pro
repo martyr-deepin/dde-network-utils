@@ -13,6 +13,15 @@ PKGCONFIG += dframeworkdbus gsettings-qt
 CONFIG += c++11 link_pkgconfig
 CONFIG -= app_bundle
 
+CONFIG(debug, debug): {
+CONFIG += sanitizer
+DEFINES += SANITIZER_CHECK
+
+MAKE_CXX += -g -fsanitize=address -O2
+QMAKE_CXXFLAGS += -g -fsanitize=address -O2
+QMAKE_LFLAGS += -g -fsanitize=address -O2
+}
+
 LIBS += -lgtest
 
 DEFINES += QT_DEPRECATED_WARNINGS
