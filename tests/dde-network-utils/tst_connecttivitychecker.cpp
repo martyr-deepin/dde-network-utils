@@ -11,20 +11,20 @@ class TstConnectivityChecker : public testing::Test
 public:
     void SetUp() override
     {
-//        obj = new ConnectivityChecker();
+        m_connectivityChecker = new ConnectivityChecker();
     }
 
     void TearDown() override
     {
-//        delete obj;
-//        obj = nullptr;
+        delete m_connectivityChecker;
+        m_connectivityChecker = nullptr;
     }
 
 public:
-    ConnectivityChecker *obj = nullptr;
+    ConnectivityChecker *m_connectivityChecker = nullptr;
 };
 
 TEST_F(TstConnectivityChecker, coverageTest)
 {
-
+    m_connectivityChecker->startCheck();
 }

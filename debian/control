@@ -11,7 +11,8 @@ Build-Depends:
  qt5-qmake,
  qttools5-dev-tools,
  libgsettings-qt-dev,
- libgtest-dev
+ libgtest-dev,
+ libasan4
 Standards-Version: 3.9.8
 Homepage: https://github.com/linuxdeepin/dde-network-utils
 
