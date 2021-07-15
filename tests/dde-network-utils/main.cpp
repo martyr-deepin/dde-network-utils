@@ -3,7 +3,9 @@
 #include <QCoreApplication>
 #include <QDebug>
 
+#ifndef NOT_SANITIZER_CHECK
 #include <sanitizer/asan_interface.h>
+#endif
 
 int main(int argc, char *argv[])
 {
@@ -15,7 +17,9 @@ int main(int argc, char *argv[])
     int ret = RUN_ALL_TESTS();
     qInfo() << "end dde-network-utils test cases ..............";
 
+#ifndef NOT_SANITIZER_CHECK
     __sanitizer_set_report_path("asan.log");
+#endif
 
     return ret;
 }
