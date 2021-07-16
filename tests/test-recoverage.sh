@@ -25,5 +25,5 @@ cd ..
 genhtml -o $REPORT_DIR $BUILD_DIR/coverage.info
 #rm -rf $BUILD_DIR
 #rm -rf ../$BUILD_DIR
-
-mv ./$BUILD_DIR/asan.log* ./$BUILD_DIR/asan_dde-network-utils.log
+[ -e ./$BUILD_DIR/asan.log* ] && mv ./$BUILD_DIR/asan.log* ./$BUILD_DIR/asan_dde-network-utils.log || touch ./$BUILD_DIR/asan_dde-network-utils.log
+#mv ./$BUILD_DIR/asan.log* ./$BUILD_DIR/asan_dde-network-utils.log

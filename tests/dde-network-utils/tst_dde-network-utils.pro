@@ -32,10 +32,13 @@ INCLUDEPATH += ../../dde-network-utils
 RESOURCES +=
 
 ARCH = $$QMAKE_HOST.arch
+message(Current Architecture)
 message($$ARCH)
-isEqual(ARCH, sw_64) | isEqual(ARCH, mips64) | isEqual(ARCH, mips32) {
-   DEFINES += NOT_SANITIZER_CHECK
-}
 
-QMAKE_CXXFLAGS += -g -fsanitize=address -fsanitize-recover=address
-QMAKE_LFLAGS += -g -fsanitize=address -fsanitize-recover=address
+isEqual(ARCH, sw_64) | isEqual(ARCH, mips64) | isEqual(ARCH, mips32) | isEqual(ARCH, mips64el) {
+    message(not support sanitize)
+} else {
+    DEFINES += SANITIZER_CHECK
+    QMAKE_CXXFLAGS += -g -fsanitize=address -fsanitize-recover=address
+    QMAKE_LFLAGS += -g -fsanitize=address -fsanitize-recover=address
+}
