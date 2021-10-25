@@ -7,6 +7,10 @@ CONFIG += link_pkgconfig c++11 create_pc create_prl no_install_prl no_keywords l
 PKGCONFIG += dframeworkdbus gsettings-qt
 DEFINES += DDENETWORKUTILS_LIBRARY QT_DEPRECATED_WARNINGS
 
+# 增加安全编译参数
+QMAKE_CFLAGS += -fstack-protector-strong -D_FORTITY_SOURCE=1 -z noexecstack -pie -fPIC -z lazy
+QMAKE_CXXFLAGS += -fstack-protector-strong -D_FORTITY_SOURCE=1 -z noexecstack -pie -fPIC -z lazy
+
 SOURCES += \
     $$PWD/networkmodel.cpp \
     $$PWD/networkworker.cpp \
