@@ -403,7 +403,7 @@ void NetworkModel::onActiveConnInfoChanged(const QString &conns)
 {
     m_activeConnInfos.clear();
 
-    QMap<QString, QJsonObject> activeConnInfo;
+    QMultiMap<QString, QJsonObject> activeConnInfo;
     QMap<QString, QJsonObject> activeHotspotInfo;
 
     // parse active connections info and save it by DevicePath
@@ -414,7 +414,7 @@ void NetworkModel::onActiveConnInfoChanged(const QString &conns)
         const auto &type = connInfo.value("ConnectionType").toString();
         const auto &devPath = connInfo.value("Device").toString();
 
-        activeConnInfo.insertMulti(devPath, connInfo);
+        activeConnInfo.insert(devPath, connInfo);
         m_activeConnInfos << connInfo;
 
         if (type == "wireless-hotspot") {
